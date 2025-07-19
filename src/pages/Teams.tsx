@@ -4,60 +4,96 @@ import { Trophy, Users, MapPin } from 'lucide-react';
 
 const Teams = () => {
   const teams = [
-    {
-      name: 'Red Bull Racing',
-      country: 'Austria',
-      founded: 2005,
-      championships: 6,
-      drivers: ['Max Verstappen', 'Sergio Pérez'],
-      color: 'bg-blue-600',
-      description: 'Dominant force in modern F1 with innovative design and strategy.'
-    },
-    {
-      name: 'Mercedes-AMG',
-      country: 'Germany',
-      founded: 2010,
-      championships: 8,
-      drivers: ['Lewis Hamilton', 'George Russell'],
-      color: 'bg-teal-500',
-      description: 'Silver Arrows with a legacy of engineering excellence.'
-    },
-    {
-      name: 'Scuderia Ferrari',
-      country: 'Italy',
-      founded: 1950,
-      championships: 16,
-      drivers: ['Charles Leclerc', 'Carlos Sainz Jr.'],
-      color: 'bg-red-600',
-      description: 'The most successful and historic team in Formula 1.'
-    },
-    {
-      name: 'McLaren Racing',
-      country: 'United Kingdom',
-      founded: 1966,
-      championships: 8,
-      drivers: ['Lando Norris', 'Oscar Piastri'],
-      color: 'bg-orange-500',
-      description: 'Racing heritage with cutting-edge technology and innovation.'
-    },
-    {
-      name: 'Aston Martin',
-      country: 'United Kingdom',
-      founded: 2021,
-      championships: 0,
-      drivers: ['Fernando Alonso', 'Lance Stroll'],
-      color: 'bg-green-600',
-      description: 'Luxury automotive brand bringing prestige to Formula 1.'
-    },
-    {
-      name: 'Alpine F1',
-      country: 'France',
-      founded: 2021,
-      championships: 2,
-      drivers: ['Pierre Gasly', 'Esteban Ocon'],
-      color: 'bg-blue-500',
-      description: 'French manufacturer with Alpine\'s racing DNA.'
-    }
+  {
+    name: 'Red Bull Racing',
+    country: 'Austria',
+    founded: 2005,
+    championships: 6,
+    drivers: ['Max Verstappen', 'Yuki Tsunoda'],
+    color: 'bg-blue-600',
+    description: 'Dominant force in modern F1 with innovative design and strategy.'
+  },
+  {
+    name: 'Mercedes-AMG',
+    country: 'Germany',
+    founded: 2010,
+    championships: 8,
+    drivers: ['Andrea Kimi Antonelli', 'George Russell'],
+    color: 'bg-teal-500',
+    description: 'Silver Arrows with a legacy of engineering excellence.'
+  },
+  {
+    name: 'Scuderia Ferrari',
+    country: 'Italy',
+    founded: 1950,
+    championships: 16,
+    drivers: ['Charles Leclerc', 'Lewis Hamilton'],
+    color: 'bg-red-600',
+    description: 'The most successful and historic team in Formula 1.'
+  },
+  {
+    name: 'McLaren Racing',
+    country: 'United Kingdom',
+    founded: 1966,
+    championships: 8,
+    drivers: ['Lando Norris', 'Oscar Piastri'],
+    color: 'bg-orange-500',
+    description: 'Racing heritage with cutting-edge technology and innovation.'
+  },
+  {
+    name: 'Aston Martin',
+    country: 'United Kingdom',
+    founded: 2021,
+    championships: 0,
+    drivers: ['Fernando Alonso', 'Lance Stroll'],
+    color: 'bg-green-600',
+    description: 'Luxury automotive brand bringing prestige to Formula 1.'
+  },
+  {
+    name: 'Alpine F1',
+    country: 'France',
+    founded: 2021,
+    championships: 2,
+    drivers: ['Pierre Gasly', 'Franco Colapinto'],
+    color: 'bg-blue-500',
+    description: 'French manufacturer with Alpine\'s racing DNA.'
+  },
+  {
+    name: 'Visa Cash App RB',
+    country: 'Italy',
+    founded: 2006,
+    championships: 0,
+    drivers: ['Isack Hadjar', 'Liam Lawson'],
+    color: 'bg-indigo-600',
+    description: 'Red Bull’s sister team, focused on driver development and performance.'
+  },
+  {
+    name: 'Stake F1 Team Kick Sauber',
+    country: 'Switzerland',
+    founded: 1993,
+    championships: 0,
+    drivers: ['Gabriel Bortoleto', 'Nico Hülkenberg'],
+    color: 'bg-lime-600',
+    description: 'Transitioning towards Audi’s 2026 entry with growing ambitions.'
+  },
+  {
+    name: 'Haas F1 Team',
+    country: 'United States',
+    founded: 2016,
+    championships: 0,
+    drivers: ['Oliver Bearman', 'Esteban Ocon'],
+    color: 'bg-gray-700',
+    description: 'American team focused on efficient performance and strategic growth.'
+  },
+  {
+    name: 'Williams Racing',
+    country: 'United Kingdom',
+    founded: 1977,
+    championships: 9,
+    drivers: ['Alex Albon', 'Carlos Sainz'],
+    color: 'bg-cyan-700',
+    description: 'A legendary name in F1 rebuilding its legacy with new leadership.'
+  }
   ];
 
   return (
