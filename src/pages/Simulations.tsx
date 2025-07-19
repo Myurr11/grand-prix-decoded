@@ -15,13 +15,14 @@ const Simulations = () => {
       link: '/simulations/pit-stop',
       features: ['Reaction Time Test', 'Step-by-step Process', 'Performance Rating', 'Real World Data']
     },
+    // Update the Race Strategy Tool status in the simulations array
     {
       title: 'Race Strategy Tool',
       description: 'Plan tire strategies, simulate race stints, and see how different approaches affect race outcomes.',
       icon: BarChart3,
       color: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-      status: 'Coming Soon',
-      link: '#',
+      status: 'Available',
+      link: '/simulations/race-strategy',
       features: ['Tire Strategy', 'Stint Simulation', 'Weather Impact', 'Position Analysis']
     },
     {
