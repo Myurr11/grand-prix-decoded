@@ -12,8 +12,8 @@ const Navigation = () => {
     { name: 'Beginner Guide', path: '/guide', icon: BookOpen },
     { name: 'F1 Terms', path: '/terms', icon: Info },
     { name: 'Teams & Drivers', path: '/teams', icon: Users },
+    { name: 'Simulations', path: '/simulations', icon: Car },
     { name: 'Tracks', path: '/tracks', icon: MapPin },
-    { name: 'Cars & Tech', path: '/tech', icon: Car },
     { name: 'Rules', path: '/rules', icon: Shield },
   ];
 

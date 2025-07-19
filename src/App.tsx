@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import Guide from "./pages/Guide";
 import Terms from "./pages/Terms";
 import Teams from "./pages/Teams";
+import Simulations from "./pages/Simulations";
+import PitStopSimulator from "./components/PitStopSimulator";
 import Tracks from "./pages/Tracks";
 import Tech from "./pages/Tech";
 import Rules from "./pages/Rules";
@@ -27,6 +29,8 @@ const App = () => (
             <Route path="/guide" element={<Guide />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/teams" element={<Teams />} />
+            <Route path="/simulations" element={<Simulations />} />
+            <Route path="/simulations/pit-stop" element={<PitStopSimulator />} />
             <Route path="/tracks" element={<Tracks />} />
             <Route path="/tech" element={<Tech />} />
             <Route path="/rules" element={<Rules />} />
