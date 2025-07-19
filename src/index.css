@@ -133,7 +133,12 @@
 @layer components {
   /* Racing Button Variants */
   .btn-hero {
-    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground px-8 py-4 rounded-lg font-bold text-lg shadow-racing hover:shadow-glow transition-all duration-300 hover:scale-105;
+    @apply bg-gradient-to-r from-primary to-primary-glow text-primary-foreground px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 hover:scale-105;
+    box-shadow: var(--shadow-racing);
+  }
+  
+  .btn-hero:hover {
+    box-shadow: var(--shadow-glow);
   }
 
   .btn-track {
@@ -142,7 +147,12 @@
 
   /* Racing Card Effects */
   .card-racing {
-    @apply bg-card border border-border rounded-xl shadow-carbon hover:shadow-racing transition-all duration-300 hover:-translate-y-1;
+    @apply bg-card border border-border rounded-xl transition-all duration-300 hover:-translate-y-1;
+    box-shadow: var(--shadow-carbon);
+  }
+  
+  .card-racing:hover {
+    box-shadow: var(--shadow-racing);
   }
 
   /* Speed Lines Animation */
@@ -207,7 +217,12 @@
 
   /* Racing Hover Effects */
   .hover-race {
-    @apply transition-all duration-300 hover:scale-105 hover:shadow-racing;
+    @apply transition-all duration-300 hover:scale-105;
+    box-shadow: var(--shadow-racing);
+  }
+  
+  .hover-race:hover {
+    box-shadow: var(--shadow-racing);
   }
 
   .hover-speed {
