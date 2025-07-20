@@ -11,6 +11,8 @@ import Teams from "./pages/Teams";
 import Simulations from "./pages/Simulations";
 import PitStopSimulator from "./components/PitStopSimulator";
 import RaceStrategyTool from "./components/RaceStrategyTool";
+import DRSVisualizer from "./components/DRSVisualizer";
+import QualifyingSimulator from "./components/QualifyingSimulator";
 import Tracks from "./pages/Tracks";
 import Tech from "./pages/Tech";
 import Rules from "./pages/Rules";
@@ -33,6 +35,8 @@ const App = () => (
             <Route path="/simulations" element={<Simulations />} />
             <Route path="/simulations/pit-stop" element={<PitStopSimulator />} />
             <Route path="/simulations/race-strategy" element={<RaceStrategyTool />} />
+            <Route path="/simulations/drs-visualizer" element={<DRSVisualizer />} />
+            <Route path="/simulations/qualifying-simulator" element={<QualifyingSimulator />} />
             <Route path="/tracks" element={<Tracks />} />
             <Route path="/tech" element={<Tech />} />
             <Route path="/rules" element={<Rules />} />

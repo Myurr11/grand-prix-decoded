@@ -15,7 +15,6 @@ const Simulations = () => {
       link: '/simulations/pit-stop',
       features: ['Reaction Time Test', 'Step-by-step Process', 'Performance Rating', 'Real World Data']
     },
-    // Update the Race Strategy Tool status in the simulations array
     {
       title: 'Race Strategy Tool',
       description: 'Plan tire strategies, simulate race stints, and see how different approaches affect race outcomes.',
@@ -30,8 +29,8 @@ const Simulations = () => {
       description: 'Interactive track animation showing DRS zones, activation timing, and overtaking dynamics.',
       icon: Zap,
       color: 'bg-green-500/10 text-green-600 border-green-500/20',
-      status: 'Coming Soon',
-      link: '#',
+      status: 'Available',
+      link: '/simulations/drs-visualizer',
       features: ['DRS Zones', 'Speed Analysis', 'Overtaking Simulator', 'Track Visualization']
     },
     {
@@ -39,8 +38,8 @@ const Simulations = () => {
       description: 'Experience the Q1, Q2, Q3 format. Set lap times and feel the pressure of knockout qualifying.',
       icon: Gamepad2,
       color: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-      status: 'Coming Soon',
-      link: '#',
+      status: 'Available',
+      link: '/simulations/qualifying-simulator',
       features: ['3-Stage Format', 'Lap Time Challenge', 'Grid Position', 'Pressure Simulation']
     }
   ];
