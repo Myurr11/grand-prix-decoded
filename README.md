@@ -28,16 +28,16 @@ To run the project locally:
 
 1. Clone the repository:
    ```sh
-git clone <YOUR_GIT_URL>
+    git clone https://github.com/Myurr11/grand-prix-decoded.git
 
 2. Navigate to Project directory
    ```sh
-cd grand-prix-decoded
+    cd grand-prix-decoded
 
 3. Install dependencies:
    ```sh
-npm install
+    npm install
 
 4. Run the development server:
    ```sh
-npm run dev
+    npm run dev

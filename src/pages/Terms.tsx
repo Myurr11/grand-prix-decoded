@@ -41,6 +41,18 @@ const Terms = () => {
       category: 'Racing Basics',
       icon: AlertTriangle
     },
+    {
+      term: 'Lights Out',
+      definition: 'The signal for the start of the race when all five red lights go out.',
+      category: 'Racing Basics',
+      icon: Flag
+    },
+    {
+      term: 'Backmarker',
+      definition: 'A slower car being lapped by the race leaders.',
+      category: 'Racing Basics',
+      icon: AlertTriangle
+    },
 
     // Strategy & Pit Stops
     {
@@ -72,6 +84,12 @@ const Terms = () => {
       definition: 'The gradual loss of tire performance over time due to wear and temperature',
       category: 'Strategy',
       icon: Gauge
+    },
+    {
+      term: 'Two-Stop Strategy',
+      definition: 'Race strategy where a driver makes two pit stops, usually to manage tire degradation.',
+      category: 'Strategy',
+      icon: Timer
     },
 
     // Technology & Car Components
@@ -137,6 +155,18 @@ const Terms = () => {
       category: 'Aerodynamics',
       icon: Wind
     },
+    {
+      term: 'Power Unit',
+      definition: 'Modern F1 engine system consisting of internal combustion engine and hybrid components.',
+      category: 'Technology',
+      icon: Fuel
+    },   
+    { 
+      term: 'Turbulence',
+      definition: 'Unstable air behind cars causing performance drop for following vehicles.',
+      category: 'Aerodynamics',
+      icon: Wind  
+    },                            
 
     // Rules & Regulations
     {
@@ -169,6 +199,12 @@ const Terms = () => {
       category: 'Rules',
       icon: Flag
     },
+    {
+      term: 'Drive-Through Penalty',
+      definition: 'Penalty requiring a driver to drive through the pit lane without stopping.',
+      category: 'Rules',
+    icon: AlertTriangle
+    },    
 
     // Safety
     {
@@ -195,6 +231,12 @@ const Terms = () => {
       category: 'Safety',
       icon: Users
     },
+    {
+  term: 'Red Flag Procedure',
+  definition: 'Protocol followed when a session is stopped, including pit lane entry and no overtaking.',
+  category: 'Safety',
+  icon: Shield
+},
 
     // Communication & Terms
     {
@@ -221,6 +263,12 @@ const Terms = () => {
       category: 'Communication',
       icon: Trophy
     },
+{
+  term: 'Push Now',
+  definition: 'Instruction to the driver to give maximum effort for a lap or stint.',
+  category: 'Communication',
+  icon: Radio
+},
 
     // Track & Racing Terms
     {
@@ -252,7 +300,57 @@ const Terms = () => {
       definition: 'Raised strips at corner edges that drivers can use to maximize the racing line',
       category: 'Track Terms',
       icon: MapPin
-    }
+    },
+    {
+  term: 'Sector',
+  definition: 'A racetrack is divided into three sectors for timing and analysis.',
+  category: 'Track Terms',
+  icon: MapPin
+},
+
+  //Slangs
+  {
+  term: 'GOAT',
+  definition: 'Acronym for "Greatest of All Time", often used for legendary drivers like Schumacher or Hamilton.',
+  category: 'Slang',
+  icon: Trophy
+},
+{
+  term: 'Clown Fiesta',
+  definition: 'Social media slang for a chaotic or mismanaged race.',
+  category: 'Slang',
+  icon: AlertTriangle
+},
+{
+  term: 'Merchant',
+  definition: 'Joking term for a driver known for one strong trait, e.g. "Wet weather merchant".',
+  category: 'Slang',
+  icon: Users
+},
+{
+  term: 'WDC / WCC',
+  definition: 'Abbreviations for World Drivers’ Championship and World Constructors’ Championship.',
+  category: 'Slang',
+  icon: Flag
+},
+{
+  term: 'Cooked',
+  definition: 'Used to describe a ruined strategy, tire, or driver stint. E.g., "His tires are cooked."',
+  category: 'Slang',
+  icon: Gauge
+},
+{
+  term: 'Bottled It',
+  definition: 'Slang for when a driver fails under pressure or makes a costly error.',
+  category: 'Slang',
+  icon: AlertTriangle
+},
+{
+  term: 'Masterclass',
+  definition: 'Social term used to describe a dominant performance, e.g. “Verstappen gave a masterclass today.”',
+  category: 'Slang',
+  icon: Trophy
+}
   ];
 
   const categories = [...new Set(terms.map(term => term.category))];
