@@ -296,11 +296,6 @@ const Terms = () => {
         <div className="absolute inset-0 checkered-bg opacity-5"></div>
         <div className="container mx-auto px-4 py-16 relative">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <Target className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium text-primary">Master F1 Language</span>
-            </div>
-            
             <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-text leading-tight">
               F1 Dictionary
             </h1>
@@ -374,27 +369,36 @@ const Terms = () => {
               {filteredTerms.map((termData, index) => {
                 const Icon = termData.icon;
                 return (
-                  <Card key={index} className="card-racing group hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="text-xl font-bold text-primary mb-2 group-hover:text-primary/90 transition-colors">
+                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-card via-card to-card/95 border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1">
+                    {/* Subtle gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <CardHeader className="relative pb-4">
+                      <div className="flex items-start gap-4">
+                        {/* Icon */}
+                        <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl flex items-center justify-center group-hover:from-primary group-hover:via-primary/90 group-hover:to-primary/80 group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/25 transition-all duration-500">
+                          <Icon className="h-7 w-7 text-primary group-hover:text-primary-foreground transition-colors duration-500" />
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-xl font-bold text-foreground mb-3 leading-tight group-hover:text-primary transition-colors duration-300">
                             {termData.term}
                           </CardTitle>
-                          <Badge className={`${getCategoryColor(termData.category)} text-xs`}>
+                          <Badge variant="secondary" className={`${getCategoryColor(termData.category)} text-xs font-medium px-3 py-1 rounded-full border-0`}>
                             {termData.category}
                           </Badge>
                         </div>
-                        <div className="p-3 bg-primary/5 rounded-xl group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 ml-3">
-                          <Icon className="h-6 w-6 text-primary group-hover:text-primary-foreground transition-colors" />
-                        </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-muted-foreground leading-relaxed text-sm">
+                    
+                    <CardContent className="relative pt-0">
+                      <p className="text-muted-foreground leading-relaxed text-sm group-hover:text-foreground/80 transition-colors duration-300">
                         {termData.definition}
                       </p>
                     </CardContent>
+
+                    {/* Bottom accent line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-primary to-primary/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
                   </Card>
                 );
               })}
