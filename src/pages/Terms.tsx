@@ -269,16 +269,16 @@ const Terms = () => {
 
   const getCategoryColor = (category: string) => {
     const colors = {
-      'Racing Basics': 'bg-gradient-to-r from-red-500/10 to-red-600/10 text-red-600 border-red-500/30',
-      'Strategy': 'bg-gradient-to-r from-green-500/10 to-green-600/10 text-green-600 border-green-500/30',
-      'Technology': 'bg-gradient-to-r from-blue-500/10 to-blue-600/10 text-blue-600 border-blue-500/30',
-      'Aerodynamics': 'bg-gradient-to-r from-purple-500/10 to-purple-600/10 text-purple-600 border-purple-500/30',
-      'Rules': 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 text-yellow-600 border-yellow-500/30',
-      'Safety': 'bg-gradient-to-r from-orange-500/10 to-orange-600/10 text-orange-600 border-orange-500/30',
-      'Communication': 'bg-gradient-to-r from-cyan-500/10 to-cyan-600/10 text-cyan-600 border-cyan-500/30',
-      'Track Terms': 'bg-gradient-to-r from-indigo-500/10 to-indigo-600/10 text-indigo-600 border-indigo-500/30'
+      'Racing Basics': 'border-red-500 text-red-600 hover:bg-red-500/5',
+      'Strategy': 'border-green-500 text-green-600 hover:bg-green-500/5',
+      'Technology': 'border-blue-500 text-blue-600 hover:bg-blue-500/5',
+      'Aerodynamics': 'border-purple-500 text-purple-600 hover:bg-purple-500/5',
+      'Rules': 'border-yellow-500 text-yellow-600 hover:bg-yellow-500/5',
+      'Safety': 'border-orange-500 text-orange-600 hover:bg-orange-500/5',
+      'Communication': 'border-cyan-500 text-cyan-600 hover:bg-cyan-500/5',
+      'Track Terms': 'border-indigo-500 text-indigo-600 hover:bg-indigo-500/5'
     };
-    return colors[category as keyof typeof colors] || 'bg-gradient-to-r from-gray-500/10 to-gray-600/10 text-gray-600 border-gray-500/30';
+    return colors[category as keyof typeof colors] || 'border-gray-500 text-gray-600 hover:bg-gray-500/5';
   };
 
   const getCategoryStats = () => {
@@ -384,7 +384,7 @@ const Terms = () => {
                           <CardTitle className="text-xl font-bold text-foreground mb-3 leading-tight group-hover:text-primary transition-colors duration-300">
                             {termData.term}
                           </CardTitle>
-                          <Badge variant="secondary" className={`${getCategoryColor(termData.category)} text-xs font-medium px-3 py-1 rounded-full border-0`}>
+                          <Badge variant="outline" className={`${getCategoryColor(termData.category)} text-xs font-medium px-3 py-1 rounded-full transition-colors duration-300`}>
                             {termData.category}
                           </Badge>
                         </div>
