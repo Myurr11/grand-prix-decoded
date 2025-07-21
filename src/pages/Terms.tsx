@@ -356,42 +356,8 @@ const Terms = () => {
             </TabsList>
           </div>
 
-          {/* Category Overview Cards */}
-          {selectedCategory === 'all' && !searchTerm && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold text-center mb-8 text-foreground">Browse by Category</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {getCategoryStats().map((stat) => (
-                  <Card 
-                    key={stat.name} 
-                    className="card-racing group cursor-pointer hover:scale-105 transition-all duration-300"
-                    onClick={() => setSelectedCategory(stat.name)}
-                  >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-center justify-between">
-                        <Badge className={getCategoryColor(stat.name)}>{stat.name}</Badge>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </div>
-                      <CardTitle className="text-lg">{stat.count} Terms</CardTitle>
-                      <CardDescription>
-                        {stat.name === 'Racing Basics' && 'Essential concepts every F1 fan should know'}
-                        {stat.name === 'Strategy' && 'Pit stops, tire management, and race tactics'}
-                        {stat.name === 'Technology' && 'Advanced car systems and hybrid power'}
-                        {stat.name === 'Aerodynamics' && 'Airflow, downforce, and performance'}
-                        {stat.name === 'Rules' && 'Regulations, flags, and track limits'}
-                        {stat.name === 'Safety' && 'Protection systems and safety procedures'}
-                        {stat.name === 'Communication' && 'Radio calls and timing terminology'}
-                        {stat.name === 'Track Terms' && 'Circuit features and racing lines'}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-
           {/* Terms Content */}
-          <TabsContent value={selectedCategory} className="mt-0">
+          <TabsContent value={selectedCategory} className="mt-8">
             {/* Results Summary */}
             <div className="text-center mb-6">
               <p className="text-muted-foreground">
