@@ -290,10 +290,10 @@ const Terms = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-background border-b">
-        <div className="absolute inset-0 checkered-bg opacity-5"></div>
+      <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
+        <div className="absolute inset-0 checkered-bg opacity-3"></div>
         <div className="container mx-auto px-4 py-16 relative">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-text leading-tight">
