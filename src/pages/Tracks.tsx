@@ -1,7 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button'; // Added missing Button import
-import { MapPin, Clock, Zap, Trophy, Calendar, Globe, ArrowRight, Info, Play, Eye, TrendingUp, Wind, Thermometer } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { MapPin, Clock, Zap, Trophy, Calendar, Globe, ArrowRight, Info, Play, Eye, TrendingUp, Wind, Thermometer, Flag, Timer, Route } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useState } from 'react';
@@ -1098,136 +1099,216 @@ const Tracks = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-          Interactive Track Guides
-        </h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Master every corner with detailed track analysis and racing insights
-        </p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-accent/20 via-background to-background">
+        <div className="absolute inset-0 bg-grid-pattern opacity-20"></div>
+        
+        <div className="container relative mx-auto px-4 py-16">
+          <div className="text-center">
+            <div className="mb-6 flex justify-center">
+              <div className="rounded-full bg-primary/10 p-4">
+                <Flag className="h-12 w-12 text-primary" />
+              </div>
+            </div>
+            <h1 className="mb-4 text-4xl font-bold tracking-tight md:text-6xl">
+              F1 Circuits & Tracks
+            </h1>
+            <p className="mx-auto max-w-2xl text-lg text-muted-foreground md:text-xl">
+              Explore every corner, analyze racing lines, and master the circuits of Formula 1
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Continent Filter */}
-      <div className="flex flex-wrap justify-center gap-2 mb-8">
-        {continents.map((continent) => (
-          <Badge 
-            key={continent}
-            variant={selectedContinent === continent ? "default" : "outline"}
-            className="cursor-pointer text-sm py-1 px-3"
-            onClick={() => setSelectedContinent(continent)}
-          >
-            {continent}
-          </Badge>
-        ))}
-      </div>
+      <div className="container mx-auto px-4 py-12">
+        {/* Continent Filter */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8">
+          {continents.map((continent) => (
+            <Badge 
+              key={continent}
+              variant={selectedContinent === continent ? "default" : "outline"}
+              className="cursor-pointer text-sm py-2 px-4 hover:scale-105 transition-transform"
+              onClick={() => setSelectedContinent(continent)}
+            >
+              <Globe className="h-3 w-3 mr-1" />
+              {continent}
+            </Badge>
+          ))}
+        </div>
 
-      {/* Circuit Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-        {filteredCircuits.map((circuit, index) => (
-          <Card key={index} className="overflow-hidden">
-            <div className="h-2 bg-primary"></div>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-xl">{circuit.name}</CardTitle>
-                  <div className="flex items-center mt-1 text-sm text-muted-foreground">
-                    <MapPin className="h-3.5 w-3.5 mr-1" />
-                    <span>{circuit.location}</span>
+        {/* Tracks Grid */}
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {filteredCircuits.map((circuit, index) => (
+            <Card 
+              key={index} 
+              className="group overflow-hidden border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+            >
+              {/* Track Image Section */}
+              <div className="relative">
+                <AspectRatio ratio={16/9} className="bg-gradient-to-br from-muted/50 to-muted">
+                  <div className="w-full h-full bg-gradient-to-br from-primary/10 to-primary/30 flex items-center justify-center">
+                    {/* Track Image Placeholder */}
+                    <div className="text-center">
+                      <Route className="h-16 w-16 text-primary/60 mx-auto mb-2" />
+                      <span className="text-sm font-medium text-muted-foreground">
+                        Track Layout
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Overlay Info */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="secondary" className="font-semibold">
+                        {circuit.continent}
+                      </Badge>
+                      <Badge variant="outline" className="bg-background/80">
+                        <Timer className="h-3 w-3 mr-1" />
+                        {circuit.firstGP}
+                      </Badge>
+                    </div>
+                  </div>
+                </AspectRatio>
+              </div>
+
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+                  {circuit.name}
+                </CardTitle>
+                <div className="flex items-center text-sm text-muted-foreground">
+                  <MapPin className="h-4 w-4 mr-1 text-primary" />
+                  {circuit.location}
+                </div>
+              </CardHeader>
+
+              <CardContent className="space-y-4">
+                {/* Track Stats Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-muted/30 rounded-lg p-3 text-center hover:bg-muted/50 transition-colors">
+                    <div className="text-xs text-muted-foreground mb-1">Length</div>
+                    <div className="font-bold text-primary">{circuit.length}</div>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-center hover:bg-muted/50 transition-colors">
+                    <div className="text-xs text-muted-foreground mb-1">Turns</div>
+                    <div className="font-bold text-primary">{circuit.turns}</div>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-center hover:bg-muted/50 transition-colors">
+                    <div className="text-xs text-muted-foreground mb-1">DRS Zones</div>
+                    <div className="font-bold text-primary">{circuit.drsZones}</div>
+                  </div>
+                  <div className="bg-muted/30 rounded-lg p-3 text-center hover:bg-muted/50 transition-colors">
+                    <div className="text-xs text-muted-foreground mb-1">Difficulty</div>
+                    <div className="font-bold text-primary">{circuit.difficulty}</div>
                   </div>
                 </div>
-                <Badge variant="secondary">{circuit.continent}</Badge>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Circuit Stats */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-muted/30 p-2 rounded-lg text-center">
-                  <div className="text-xs text-muted-foreground mb-1">Length</div>
-                  <div className="font-medium">{circuit.length}</div>
-                </div>
-                <div className="bg-muted/30 p-2 rounded-lg text-center">
-                  <div className="text-xs text-muted-foreground mb-1">Turns</div>
-                  <div className="font-medium">{circuit.turns}</div>
-                </div>
-                <div className="bg-muted/30 p-2 rounded-lg text-center">
-                  <div className="text-xs text-muted-foreground mb-1">DRS Zones</div>
-                  <div className="font-medium">{circuit.drsZones}</div>
-                </div>
-                <div className="bg-muted/30 p-2 rounded-lg text-center">
-                  <div className="text-xs text-muted-foreground mb-1">First GP</div>
-                  <div className="font-medium">{circuit.firstGP}</div>
-                </div>
-              </div>
-              
-              {/* Circuit Description */}
-              <div>
-                <p className="text-sm text-muted-foreground">{circuit.description}</p>
-              </div>
-              
-              {/* Key Features */}
-              <div>
-                <div className="text-xs font-medium mb-2">KEY FEATURES</div>
-                <div className="grid grid-cols-2 gap-2">
-                  {circuit.keyFeatures.map((feature, featureIndex) => (
-                    <div key={featureIndex} className="flex items-center space-x-1 text-xs text-muted-foreground">
-                      <div className="w-1.5 h-1.5 bg-primary rounded-full"></div>
-                      <span>{feature}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Lap Record */}
-              <div className="pt-2 border-t border-border">
-                <div className="flex items-center text-xs mb-3">
-                  <Trophy className="h-3.5 w-3.5 text-primary mr-1" />
-                  <span className="font-medium">Lap Record:</span>
-                  <span className="ml-1 text-muted-foreground">{circuit.lapRecord}</span>
+                
+                {/* Description */}
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {circuit.description}
+                </p>
+                
+                {/* Key Features */}
+                <div className="space-y-2">
+                  <div className="text-xs font-semibold text-primary uppercase tracking-wide">
+                    Key Features
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {circuit.keyFeatures.slice(0, 4).map((feature, featureIndex) => (
+                      <Badge 
+                        key={featureIndex} 
+                        variant="outline" 
+                        className="text-xs py-1 px-2"
+                      >
+                        {feature}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
                 
-                {/* Interactive Guide Button */}
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="w-full" size="sm" onClick={() => setSelectedTrack(circuit)}>
-                      <Eye className="h-4 w-4 mr-2" />
-                      Interactive Guide
-                    </Button>
-                  </DialogTrigger>
-                  <TrackGuideDialog track={selectedTrack} />
-                </Dialog>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                {/* Lap Record */}
+                <div className="pt-3 border-t border-border">
+                  <div className="flex items-center text-xs mb-3">
+                    <Trophy className="h-4 w-4 text-primary mr-2" />
+                    <div>
+                      <div className="font-semibold">Lap Record</div>
+                      <div className="text-muted-foreground">{circuit.lapRecord}</div>
+                    </div>
+                  </div>
+                  
+                  {/* Action Button */}
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button 
+                        className="w-full group/btn" 
+                        size="sm" 
+                        onClick={() => setSelectedTrack(circuit)}
+                      >
+                        <Eye className="h-4 w-4 mr-2 transition-transform group-hover/btn:scale-110" />
+                        Explore Track
+                        <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
+                      </Button>
+                    </DialogTrigger>
+                    <TrackGuideDialog track={selectedTrack} />
+                  </Dialog>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-      {/* Enhanced Circuit Facts */}
-      <div className="mt-16 bg-secondary rounded-xl p-8 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold text-secondary-foreground mb-6 text-center">
-          Master the Circuits
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-          <div>
-            <TrendingUp className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h3 className="font-semibold mb-2">Corner Analysis</h3>
-            <p className="text-sm text-muted-foreground">
-              Learn every corner with detailed breakdowns of racing lines, braking points, and difficulty levels
+        {/* Circuit Facts Section */}
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-2">Master Every Circuit</h2>
+            <p className="text-muted-foreground">
+              Dive deep into track analysis with detailed corner breakdowns and strategic insights
             </p>
           </div>
-          <div>
-            <Zap className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h3 className="font-semibold mb-2">Strategy Insights</h3>
-            <p className="text-sm text-muted-foreground">
-              Understand overtaking opportunities, setup requirements, and tire strategies for each circuit
-            </p>
-          </div>
-          <div>
-            <Clock className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h3 className="font-semibold mb-2">Historic Moments</h3>
-            <p className="text-sm text-muted-foreground">
-              Discover the legendary races and memorable moments that define each circuit's character
-            </p>
+          
+          <div className="grid gap-6 md:grid-cols-3">
+            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
+              <CardContent className="pt-6 text-center">
+                <div className="mb-4 flex justify-center">
+                  <div className="rounded-full bg-primary/10 p-3">
+                    <TrendingUp className="h-8 w-8 text-primary" />
+                  </div>
+                </div>
+                <h3 className="font-bold mb-2">Corner Analysis</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Detailed breakdowns of racing lines, braking points, and corner difficulty ratings for every turn
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
+              <CardContent className="pt-6 text-center">
+                <div className="mb-4 flex justify-center">
+                  <div className="rounded-full bg-primary/10 p-3">
+                    <Zap className="h-8 w-8 text-primary" />
+                  </div>
+                </div>
+                <h3 className="font-bold mb-2">Race Strategy</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Overtaking zones, tire strategies, and setup requirements tailored for each unique circuit
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-2 border-primary/20 hover:border-primary/40 transition-colors">
+              <CardContent className="pt-6 text-center">
+                <div className="mb-4 flex justify-center">
+                  <div className="rounded-full bg-primary/10 p-3">
+                    <Trophy className="h-8 w-8 text-primary" />
+                  </div>
+                </div>
+                <h3 className="font-bold mb-2">Historic Moments</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Legendary races and memorable moments that define each circuit's unique character and legacy
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
