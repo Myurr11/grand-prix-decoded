@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Trophy, Users, MapPin, Calendar, Star, Zap } from 'lucide-react';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Trophy, Users, MapPin, Calendar, Star, Zap, Car } from 'lucide-react';
 
 const Teams = () => {
   const teams = [
@@ -141,64 +142,103 @@ const Teams = () => {
 
       <div className="container mx-auto px-4 py-12">
         {/* Teams Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 lg:grid-cols-2">
           {teams.map((team, index) => (
             <Card 
               key={index} 
-              className={`group overflow-hidden border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${team.colorClass}`}
+              className={`group overflow-hidden border-2 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl ${team.colorClass}`}
             >
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <CardTitle className="mb-3 text-xl font-bold leading-tight">
-                      {team.name}
-                    </CardTitle>
-                    
-                    <div className="flex flex-wrap gap-3 text-sm">
-                      <div className="flex items-center gap-1.5">
-                        <MapPin className={`h-4 w-4 ${team.iconColor}`} />
-                        <span className="text-muted-foreground">{team.country}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className={`h-4 w-4 ${team.iconColor}`} />
-                        <span className="text-muted-foreground">Est. {team.founded}</span>
-                      </div>
+              {/* Team Header with Logo and Car */}
+              <div className="relative">
+                <div className={`h-32 bg-gradient-to-r ${team.colorClass} flex items-center justify-center`}>
+                  {/* Team Logo Placeholder */}
+                  <div className="absolute left-6 top-4">
+                    <div className={`w-16 h-16 rounded-full bg-background/90 border-2 ${team.accentColor} flex items-center justify-center`}>
+                      <span className="text-xs font-bold text-center leading-tight">
+                        LOGO
+                      </span>
                     </div>
                   </div>
                   
-                  <div className="flex flex-col items-end gap-2">
-                    <Badge variant="outline" className={`${team.accentColor} font-semibold`}>
+                  {/* Car Image Placeholder */}
+                  <div className="absolute right-6 top-1/2 -translate-y-1/2">
+                    <div className={`w-20 h-12 rounded bg-background/20 border ${team.accentColor} flex items-center justify-center`}>
+                      <Car className={`h-6 w-6 ${team.iconColor}`} />
+                    </div>
+                  </div>
+                  
+                  {/* Championships Badge */}
+                  <div className="absolute top-4 right-4">
+                    <Badge variant="outline" className={`${team.accentColor} font-bold bg-background/90`}>
                       <Trophy className="mr-1 h-3 w-3" />
-                      {team.championships} titles
+                      {team.championships}
                     </Badge>
                   </div>
                 </div>
-              </CardHeader>
+                
+                {/* Team Info Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/95 to-transparent p-4">
+                  <CardTitle className="text-xl font-bold mb-1">{team.name}</CardTitle>
+                  <div className="flex gap-4 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {team.country}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {team.founded}
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-              <CardContent className="space-y-4">
-                <p className="text-sm leading-relaxed text-muted-foreground">
+              <CardContent className="p-6">
+                <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
                   {team.description}
                 </p>
                 
-                <div className="space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Users className={`h-4 w-4 ${team.iconColor}`} />
-                    <span className="text-sm font-semibold">Current Drivers</span>
+                {/* Drivers Section */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Users className={`h-5 w-5 ${team.iconColor}`} />
+                    <span className="font-semibold">2025 Drivers</span>
                   </div>
                   
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-2 gap-4">
                     {team.drivers.map((driver, driverIndex) => (
                       <div
                         key={driverIndex}
-                        className={`group/driver flex items-center justify-between rounded-lg border-2 p-3 transition-all duration-200 hover:shadow-md ${team.colorClass}`}
+                        className={`group/driver relative overflow-hidden rounded-lg border-2 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg ${team.colorClass}`}
                       >
-                        <div className="flex items-center gap-3">
-                          <div className={`flex h-8 w-8 items-center justify-center rounded-full border-2 text-xs font-bold ${team.accentColor}`}>
-                            {driverIndex + 1}
+                        {/* Driver Photo Placeholder */}
+                        <div className="aspect-[3/4] bg-gradient-to-b from-muted/50 to-muted relative">
+                          <Avatar className="w-full h-full rounded-none">
+                            <AvatarImage src="" alt={driver} />
+                            <AvatarFallback className="w-full h-full rounded-none bg-gradient-to-b from-muted/30 to-muted flex items-center justify-center text-4xl font-bold">
+                              {driver.split(' ').map(n => n[0]).join('')}
+                            </AvatarFallback>
+                          </Avatar>
+                          
+                          {/* Driver Number Badge */}
+                          <div className="absolute top-3 left-3">
+                            <div className={`w-8 h-8 rounded-full border-2 ${team.accentColor} bg-background/90 flex items-center justify-center text-sm font-bold`}>
+                              {driverIndex + 1}
+                            </div>
                           </div>
-                          <span className="font-medium">{driver}</span>
+                          
+                          {/* Gradient Overlay */}
+                          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
                         </div>
-                        <Zap className={`h-4 w-4 opacity-50 transition-opacity group-hover/driver:opacity-100 ${team.iconColor}`} />
+                        
+                        {/* Driver Info */}
+                        <div className="absolute bottom-0 left-0 right-0 p-3">
+                          <div className="text-sm font-bold leading-tight mb-1">
+                            {driver}
+                          </div>
+                          <div className={`text-xs font-medium ${team.iconColor}`}>
+                            {team.name.split(' ')[0]} Driver
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
