@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, Zap, Wind, Trophy, Timer, Flag, Car, Settings, Users, Target, AlertTriangle, Radio, Fuel, Gauge, MapPin, Clock, Shield, ChevronRight } from 'lucide-react';
@@ -387,14 +388,18 @@ const Terms = () => {
     return stats;
   };
 
-  return (
+ return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
-        <div className="absolute inset-0 checkered-bg opacity-3"></div>
         <div className="container mx-auto px-4 py-16 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 gradient-text leading-tight">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
               F1 Dictionary
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
@@ -403,10 +408,10 @@ const Terms = () => {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-              {getCategoryStats().slice(0, 4).map((stat, index) => (
+              {getCategoryStats().slice(0, 4).map((stat) => (
                 <div key={stat.name} className="p-4 bg-card/50 backdrop-blur-sm rounded-lg border border-border/50">
                   <div className="text-2xl font-bold text-primary mb-1">{stat.count}</div>
-                  <div className="text-sm text-muted-foreground">{stat.name}</div>
+                  <div className="text-sm text-muted-foreground">{stat.name.replace('Racing Basics', 'Basics')}</div>
                 </div>
               ))}
             </div>
@@ -422,16 +427,19 @@ const Terms = () => {
                 className="pl-12 pr-4 py-4 text-lg bg-background/80 backdrop-blur-sm border-border/50 focus:border-primary/50 rounded-xl"
               />
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-12">
         <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
           {/* Category Tabs */}
-          <div className="flex justify-center mb-8">
-            <TabsList className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-9 w-full max-w-6xl h-auto p-1 bg-muted/50">
-              <TabsTrigger value="all" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-3 py-2 text-xs">
+          <div className="flex justify-center mb-8 overflow-x-auto">
+            <TabsList className="inline-flex h-auto p-1 bg-muted/50 rounded-lg">
+              <TabsTrigger 
+                value="all" 
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-3 py-2 text-xs whitespace-nowrap"
+              >
                 All ({terms.length})
               </TabsTrigger>
               {categories.map((category) => {
@@ -440,7 +448,7 @@ const Terms = () => {
                   <TabsTrigger 
                     key={category} 
                     value={category}
-                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-3 py-2 text-xs"
+                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground px-3 py-2 text-xs whitespace-nowrap"
                   >
                     {category.replace('Racing Basics', 'Basics').replace('Track Terms', 'Track')} ({count})
                   </TabsTrigger>
@@ -467,36 +475,30 @@ const Terms = () => {
               {filteredTerms.map((termData, index) => {
                 const Icon = termData.icon;
                 return (
-                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-card via-card to-card/95 border border-border/50 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1">
-                    {/* Subtle gradient overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-secondary/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    
-                    <CardHeader className="relative pb-4">
+                  <Card key={index} className="group relative overflow-hidden bg-card border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
+                    <CardHeader className="pb-4">
                       <div className="flex items-start gap-4">
                         {/* Icon */}
-                        <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent rounded-2xl flex items-center justify-center group-hover:from-primary group-hover:via-primary/90 group-hover:to-primary/80 group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/25 transition-all duration-500">
-                          <Icon className="h-7 w-7 text-primary group-hover:text-primary-foreground transition-colors duration-500" />
+                        <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
+                          <Icon className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
-                          <CardTitle className="text-xl font-bold text-foreground mb-3 leading-tight group-hover:text-primary transition-colors duration-300">
+                          <CardTitle className="text-lg font-bold text-foreground mb-2 leading-tight">
                             {termData.term}
                           </CardTitle>
-                          <Badge variant="outline" className={`${getCategoryColor(termData.category)} text-xs font-medium px-3 py-1 rounded-full transition-colors duration-300`}>
+                          <Badge variant="outline" className={`${getCategoryColor(termData.category)} text-xs font-medium px-2 py-1 rounded-full`}>
                             {termData.category}
                           </Badge>
                         </div>
                       </div>
                     </CardHeader>
                     
-                    <CardContent className="relative pt-0">
-                      <p className="text-muted-foreground leading-relaxed text-sm group-hover:text-foreground/80 transition-colors duration-300">
+                    <CardContent className="pt-0">
+                      <p className="text-muted-foreground leading-relaxed">
                         {termData.definition}
                       </p>
                     </CardContent>
-
-                    {/* Bottom accent line */}
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-primary to-primary/20 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center"></div>
                   </Card>
                 );
               })}
@@ -510,14 +512,14 @@ const Terms = () => {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">No terms found</h3>
                 <p className="text-muted-foreground mb-4">
-                  No terms found matching "{searchTerm}"
+                  {searchTerm && `No terms found matching "${searchTerm}"`}
                   {selectedCategory !== 'all' && ` in ${selectedCategory}`}
                 </p>
                 <div className="flex gap-2 justify-center">
                   {searchTerm && (
                     <button 
                       onClick={() => setSearchTerm('')}
-                      className="btn-track px-4 py-2 text-sm"
+                      className="px-4 py-2 text-sm bg-primary text-primary-foreground rounded-md"
                     >
                       Clear search
                     </button>
@@ -525,7 +527,7 @@ const Terms = () => {
                   {selectedCategory !== 'all' && (
                     <button 
                       onClick={() => setSelectedCategory('all')}
-                      className="btn-hero px-4 py-2 text-sm"
+                      className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-md"
                     >
                       View all categories
                     </button>
