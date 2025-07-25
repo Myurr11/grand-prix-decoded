@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Flag, BookOpen, Users, MapPin, Car, Shield, Info } from 'lucide-react';
+import { Menu, X, Flag, BookOpen, Users, MapPin, Car, Shield, Info, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navigation = () => {
@@ -12,6 +12,7 @@ const Navigation = () => {
     { name: 'Beginner Guide', path: '/guide', icon: BookOpen },
     { name: 'F1 Terms', path: '/terms', icon: Info },
     { name: 'Teams & Drivers', path: '/teams', icon: Users },
+    { name: 'Calendar', path: '/calendar', icon: Calendar },
     { name: 'Simulations', path: '/simulations', icon: Car },
     { name: 'Tracks', path: '/tracks', icon: MapPin },
     { name: 'Rules', path: '/rules', icon: Shield },

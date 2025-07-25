@@ -16,6 +16,7 @@ import QualifyingSimulator from "./components/QualifyingSimulator";
 import Tracks from "./pages/Tracks";
 import Tech from "./pages/Tech";
 import Rules from "./pages/Rules";
+import Calendar from "./pages/Calendar";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/tracks" element={<Tracks />} />
             <Route path="/tech" element={<Tech />} />
             <Route path="/rules" element={<Rules />} />
+            <Route path="/calendar" element={<Calendar />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
