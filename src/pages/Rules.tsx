@@ -348,34 +348,52 @@ const Rules = () => {
 
           {/* Flags Tab */}
           <TabsContent value="flags" className="space-y-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Formula 1 Race Flags</h2>
-              <p className="text-muted-foreground">Official flag signals used to communicate with drivers during sessions</p>
+            <div className="text-center mb-12">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/50"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                    <Flag className="h-5 w-5 inline mr-2 text-primary" />
+                    Formula 1 Race Flags
+                  </span>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Official Flag Signals</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">Understanding the visual communication system that controls Formula 1 racing</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {flags.map((flag, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden border-l-4 border-l-primary">
-                  <div className={`h-3 ${flag.color} transition-all duration-300`}></div>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className={`p-3 rounded-xl ${flag.color} text-white shadow-lg`}>
-                          <flag.icon className="h-5 w-5" />
+                <Card key={index} className="group relative overflow-hidden border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:rotate-1">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}></div>
+                  
+                  <CardHeader className="relative z-10 pb-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-4">
+                        <div className={`p-4 rounded-2xl ${flag.color} text-white shadow-xl group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
+                          <flag.icon className="h-6 w-6" />
                         </div>
                         <div>
-                          <CardTitle className="text-lg">{flag.name}</CardTitle>
-                          <Badge variant="secondary" className="text-xs mt-1">{flag.category}</Badge>
+                          <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">{flag.name}</CardTitle>
+                          <Badge variant="outline" className="mt-2 border-primary/30 bg-primary/10 text-primary font-medium">{flag.category}</Badge>
                         </div>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent className="space-y-3">
-                    <p className="font-medium text-sm">{flag.description}</p>
-                    <div className="bg-muted/30 p-3 rounded-lg">
-                      <p className="text-xs text-muted-foreground">{flag.usage}</p>
+                  
+                  <CardContent className="relative z-10 space-y-4">
+                    <div className="bg-gradient-to-r from-muted/50 to-muted/30 p-4 rounded-xl border border-border/50">
+                      <p className="font-semibold text-foreground mb-2">{flag.description}</p>
+                    </div>
+                    <div className="bg-gradient-to-r from-accent/10 to-primary/10 p-4 rounded-xl border border-primary/20">
+                      <p className="text-sm text-muted-foreground leading-relaxed">{flag.usage}</p>
                     </div>
                   </CardContent>
+                  
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
                 </Card>
               ))}
             </div>
@@ -383,103 +401,212 @@ const Rules = () => {
 
           {/* Penalties Tab */}
           <TabsContent value="penalties" className="space-y-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">F1 Penalties & Sanctions</h2>
-              <p className="text-muted-foreground">Complete overview of disciplinary measures in Formula 1</p>
+            <div className="text-center mb-12">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/50"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                    <Scale className="h-5 w-5 inline mr-2 text-red-500" />
+                    Formula 1 Penalties
+                  </span>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">Sanctions & Disciplinary Measures</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">Understanding the enforcement system that ensures fair competition in Formula 1</p>
             </div>
             
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="space-y-8">
               {penalties.map((penalty, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <CardHeader className="pb-4">
-                    <div className="flex items-start space-x-4">
-                      <div className={`p-4 rounded-xl ${penalty.color} shadow-sm`}>
-                        <penalty.icon className="h-6 w-6" />
+                <Card key={index} className="group relative overflow-hidden bg-gradient-to-r from-background to-background/50 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:scale-[1.02] border-l-4 border-l-red-500">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <CardHeader className="relative z-10 pb-6">
+                    <div className="flex items-start space-x-6">
+                      <div className={`p-5 rounded-2xl ${penalty.color} shadow-xl group-hover:scale-110 transition-transform duration-300 border border-border/50`}>
+                        <penalty.icon className="h-8 w-8" />
                       </div>
                       <div className="flex-1">
-                        <CardTitle className="text-xl mb-2">{penalty.name}</CardTitle>
-                        <CardDescription className="text-base">
+                        <CardTitle className="text-2xl mb-3 group-hover:text-red-600 transition-colors duration-300">{penalty.name}</CardTitle>
+                        <CardDescription className="text-lg text-muted-foreground leading-relaxed">
                           {penalty.description}
                         </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
+                  
+                  <CardContent className="relative z-10">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {penalty.examples.map((example, exampleIndex) => (
-                        <div key={exampleIndex} className="bg-muted/40 p-4 rounded-lg border border-border/50">
-                          <h4 className="font-semibold text-sm mb-2 text-primary">{example.penalty}</h4>
+                        <div key={exampleIndex} className="group/example bg-gradient-to-br from-muted/30 to-muted/20 p-5 rounded-xl border border-border/30 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300">
+                          <div className="flex items-center mb-3">
+                            <div className="w-2 h-2 bg-red-500 rounded-full mr-3 group-hover/example:scale-125 transition-transform duration-300"></div>
+                            <h4 className="font-bold text-foreground group-hover/example:text-red-600 transition-colors duration-300">{example.penalty}</h4>
+                          </div>
                           <p className="text-sm text-muted-foreground leading-relaxed">{example.description}</p>
                         </div>
                       ))}
                     </div>
                   </CardContent>
+                  
+                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-red-500/10 to-transparent rounded-full blur-3xl -translate-y-20 translate-x-20 group-hover:scale-150 transition-transform duration-700" />
                 </Card>
               ))}
             </div>
           </TabsContent>
 
           {/* Sporting Regulations Tab */}
-          <TabsContent value="sporting" className="space-y-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Sporting Regulations</h2>
-              <p className="text-muted-foreground">Racing conduct, procedures, and competition rules</p>
+          <TabsContent value="sporting" className="space-y-10">
+            <div className="text-center mb-12">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/50"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                    <Users className="h-5 w-5 inline mr-2 text-blue-600" />
+                    Sporting Regulations
+                  </span>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Racing Conduct & Procedures</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">Rules governing fair competition, track conduct, and racing procedures</p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {sportingRegulations.map((regulation, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-primary">{regulation.title}</CardTitle>
-                    <CardDescription className="text-base">{regulation.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="bg-muted/30 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">{regulation.details}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            {/* Racing Regulations */}
+            <div className="mb-16">
+              <h3 className="text-2xl font-bold mb-8 text-center">
+                <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">On-Track Racing Rules</span>
+              </h3>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {sportingRegulations.map((regulation, index) => (
+                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-blue-50/50 to-white/50 dark:from-blue-950/20 dark:to-background/50 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-105 border-l-4 border-l-blue-500">
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <CardHeader className="relative z-10 pb-4">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm group-hover:scale-110 transition-transform duration-300">
+                          {index + 1}
+                        </div>
+                        <CardTitle className="text-lg font-bold group-hover:text-blue-600 transition-colors duration-300">{regulation.title}</CardTitle>
+                      </div>
+                      <CardDescription className="text-sm leading-relaxed">{regulation.description}</CardDescription>
+                    </CardHeader>
+                    
+                    <CardContent className="relative z-10">
+                      <div className="bg-gradient-to-r from-blue-500/10 to-blue-400/10 p-4 rounded-xl border border-blue-500/20">
+                        <p className="text-xs text-muted-foreground leading-relaxed">{regulation.details}</p>
+                      </div>
+                    </CardContent>
+                    
+                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-blue-500/20 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                  </Card>
+                ))}
+              </div>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-12">
-              {procedureRegulations.map((regulation, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-primary">{regulation.title}</CardTitle>
-                    <CardDescription className="text-base">{regulation.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="bg-muted/30 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">{regulation.details}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            {/* Procedure Regulations */}
+            <div>
+              <h3 className="text-2xl font-bold mb-8 text-center">
+                <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">Race Procedures & Protocols</span>
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {procedureRegulations.map((regulation, index) => (
+                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-purple-50/50 to-white/50 dark:from-purple-950/20 dark:to-background/50 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-500 hover:-translate-y-2 border border-purple-200/50 dark:border-purple-800/50">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <CardHeader className="relative z-10 pb-4">
+                      <div className="flex items-start space-x-4">
+                        <div className="p-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
+                          <Timer className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-xl font-bold group-hover:text-purple-600 transition-colors duration-300 mb-2">{regulation.title}</CardTitle>
+                          <CardDescription className="text-sm leading-relaxed">{regulation.description}</CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="relative z-10">
+                      <div className="bg-gradient-to-r from-purple-500/10 to-purple-400/10 p-5 rounded-xl border border-purple-500/20">
+                        <p className="text-sm text-muted-foreground leading-relaxed font-medium">{regulation.details}</p>
+                      </div>
+                    </CardContent>
+                    
+                    <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-purple-500/15 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                  </Card>
+                ))}
+              </div>
             </div>
           </TabsContent>
 
           {/* Technical Regulations Tab */}
-          <TabsContent value="technical" className="space-y-8">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold mb-4">Technical Regulations</h2>
-              <p className="text-muted-foreground">Car specifications, safety requirements, and technical compliance</p>
+          <TabsContent value="technical" className="space-y-12">
+            <div className="text-center mb-16">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border/50"></div>
+                </div>
+                <div className="relative flex justify-center">
+                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                    <Car className="h-5 w-5 inline mr-2 text-orange-600" />
+                    Technical Regulations
+                  </span>
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-orange-600 to-yellow-500 bg-clip-text text-transparent">Car Specifications & Technical Compliance</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">Engineering standards that govern Formula 1 car design and construction</p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {technicalRegulations.map((regulation, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-primary">{regulation.title}</CardTitle>
-                    <CardDescription className="text-base">{regulation.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="bg-muted/30 p-4 rounded-lg">
-                      <p className="text-sm text-muted-foreground">{regulation.details}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="relative">
+              {/* Technical regulation cards with hexagonal grid layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                {technicalRegulations.map((regulation, index) => (
+                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-orange-50/30 to-yellow-50/30 dark:from-orange-950/20 dark:to-yellow-950/20 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-700 hover:scale-110 hover:-rotate-2 border-2 border-orange-200/50 dark:border-orange-800/50">
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    {/* Hexagonal accent */}
+                    <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 opacity-20 transform rotate-45 group-hover:scale-125 group-hover:rotate-90 transition-all duration-500"></div>
+                    
+                    <CardHeader className="relative z-10 pb-6">
+                      <div className="flex items-start space-x-4">
+                        <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-yellow-500 text-white shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
+                          <Fuel className="h-6 w-6" />
+                        </div>
+                        <div className="flex-1">
+                          <CardTitle className="text-xl font-bold group-hover:text-orange-600 transition-colors duration-300 mb-3">{regulation.title}</CardTitle>
+                          <div className="w-12 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full group-hover:w-24 transition-all duration-500"></div>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="relative z-10 space-y-4">
+                      <div className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 p-5 rounded-2xl border border-orange-500/20 group-hover:border-orange-500/40 transition-all duration-300">
+                        <p className="font-semibold text-foreground mb-3 text-lg leading-relaxed">{regulation.description}</p>
+                      </div>
+                      
+                      <div className="bg-gradient-to-br from-muted/40 to-muted/20 p-5 rounded-2xl border border-border/30 group-hover:bg-orange-500/5 transition-all duration-300">
+                        <div className="flex items-start space-x-3">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                          <p className="text-sm text-muted-foreground leading-relaxed flex-1">{regulation.details}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                    
+                    {/* Technical circuit pattern */}
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                    
+                    {/* Glowing orb effect */}
+                    <div className="absolute bottom-4 right-4 w-8 h-8 bg-gradient-to-br from-orange-500/30 to-yellow-500/30 rounded-full blur-lg group-hover:scale-200 transition-transform duration-700"></div>
+                  </Card>
+                ))}
+              </div>
+              
+              {/* Background tech pattern */}
+              <div className="absolute inset-0 opacity-5 pointer-events-none">
+                <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_var(--orange-500)_1px,_transparent_1px)] bg-[length:40px_40px]"></div>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
