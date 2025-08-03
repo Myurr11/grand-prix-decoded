@@ -1,370 +1,89 @@
-import { useState } from 'react';
+ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, Zap, Wind, Trophy, Timer, Flag, Car, Settings, Users, Target, AlertTriangle, Radio, Fuel, Gauge, MapPin, Clock, Shield, ChevronRight } from 'lucide-react';
+import { fetchAllTerms, fetchTermsByCategory, searchTerms } from '@/services/termsService';
+
+// Define the Term type
+interface Term {
+  term: string;
+  definition: string;
+  category: string;
+  icon: string;
+}
+
+// Map icon strings to actual components
+const iconComponents: Record<string, React.ComponentType<any>> = {
+  'Flag': Flag,
+  'Target': Target,
+  'AlertTriangle': AlertTriangle,
+  'Timer': Timer,
+  'Radio': Radio,
+  'Gauge': Gauge,
+  'Zap': Zap,
+  'Wind': Wind,
+  'Fuel': Fuel,
+  'Trophy': Trophy,
+  'Car': Car,
+  'Users': Users,
+  'Shield': Shield,
+  'MapPin': MapPin,
+  'Clock': Clock
+};
 
 const Terms = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [terms, setTerms] = useState<Term[]>([]);
+  const [filteredTerms, setFilteredTerms] = useState<Term[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<string[]>([]);
 
-  const terms = [
-    // Basic Racing Terms
-    {
-      term: 'Pole Position',
-      definition: 'The first starting position on the grid, earned by setting the fastest qualifying time in Q3',
-      category: 'Racing Basics',
-      icon: Flag
-    },
-    {
-      term: 'Grid',
-      definition: 'The starting formation for a race, arranged by qualifying times with fastest on pole position',
-      category: 'Racing Basics',
-      icon: Target
-    },
-    {
-      term: 'Formation Lap',
-      definition: 'A slow lap before the race start where drivers warm up their tires and brakes',
-      category: 'Racing Basics',
-      icon: Flag
-    },
-    {
-      term: 'DNF',
-      definition: 'Did Not Finish - When a driver fails to complete the race due to mechanical failure or crash',
-      category: 'Racing Basics',
-      icon: AlertTriangle
-    },
-    {
-      term: 'DNS',
-      definition: 'Did Not Start - When a driver is unable to take part in the race',
-      category: 'Racing Basics',
-      icon: AlertTriangle
-    },
-    {
-      term: 'Lights Out',
-      definition: 'The signal for the start of the race when all five red lights go out.',
-      category: 'Racing Basics',
-      icon: Flag
-    },
-    {
-      term: 'Backmarker',
-      definition: 'A slower car being lapped by the race leaders.',
-      category: 'Racing Basics',
-      icon: AlertTriangle
-    },
-
-    // Strategy & Pit Stops
-    {
-      term: 'Undercut',
-      definition: 'Pit stop strategy where a driver stops earlier than rivals to gain track position with fresher tires',
-      category: 'Strategy',
-      icon: Timer
-    },
-    {
-      term: 'Overcut',
-      definition: 'Strategy of staying out longer than rivals to gain track position when they pit',
-      category: 'Strategy',
-      icon: Clock
-    },
-    {
-      term: 'Box Box',
-      definition: 'Radio call instructing driver to enter the pit lane for a pit stop',
-      category: 'Strategy',
-      icon: Radio
-    },
-    {
-      term: 'Pit Window',
-      definition: 'The optimal time period during a race to make a pit stop for maximum strategic advantage',
-      category: 'Strategy',
-      icon: Timer
-    },
-    {
-      term: 'Tyre Degradation',
-      definition: 'The gradual loss of tire performance over time due to wear and temperature',
-      category: 'Strategy',
-      icon: Gauge
-    },
-    {
-      term: 'Two-Stop Strategy',
-      definition: 'Race strategy where a driver makes two pit stops, usually to manage tire degradation.',
-      category: 'Strategy',
-      icon: Timer
-    },
-
-    // Technology & Car Components
-    {
-      term: 'DRS',
-      definition: 'Drag Reduction System - Moveable rear wing element that reduces drag on straights to aid overtaking',
-      category: 'Technology',
-      icon: Wind
-    },
-    {
-      term: 'ERS',
-      definition: 'Energy Recovery System - Hybrid technology that recovers and deploys energy for extra 160hp',
-      category: 'Technology',
-      icon: Zap
-    },
-    {
-      term: 'MGU-K',
-      definition: 'Motor Generator Unit-Kinetic - Recovers energy from braking and deploys it for acceleration',
-      category: 'Technology',
-      icon: Zap
-    },
-    {
-      term: 'MGU-H',
-      definition: 'Motor Generator Unit-Heat - Recovers energy from exhaust gases via the turbocharger',
-      category: 'Technology',
-      icon: Fuel
-    },
-    {
-      term: 'Telemetry',
-      definition: 'Real-time data transmission from the car to the pit wall about performance and systems',
-      category: 'Technology',
-      icon: Radio
-    },
-
-    // Aerodynamics
-    {
-      term: 'Dirty Air',
-      definition: 'Turbulent air behind another car that reduces aerodynamic efficiency and downforce',
-      category: 'Aerodynamics',
-      icon: Wind
-    },
-    {
-      term: 'Slipstream',
-      definition: 'The area of reduced air pressure behind a car that allows following cars to go faster',
-      category: 'Aerodynamics',
-      icon: Wind
-    },
-    {
-      term: 'Downforce',
-      definition: 'Aerodynamic force that pushes the car down onto the track for better grip and cornering',
-      category: 'Aerodynamics',
-      icon: Target
-    },
-    {
-      term: 'Ground Effect',
-      definition: 'Aerodynamic phenomenon where air under the car creates a low-pressure area generating downforce',
-      category: 'Aerodynamics',
-      icon: Wind
-    },
-    {
-      term: 'Porpoising',
-      definition: 'Bouncing motion of the car caused by ground effect aerodynamics at high speeds',
-      category: 'Aerodynamics',
-      icon: Wind
-    },
-    {
-      term: 'Power Unit',
-      definition: 'Modern F1 engine system consisting of internal combustion engine and hybrid components.',
-      category: 'Technology',
-      icon: Fuel
-    },   
-    { 
-      term: 'Turbulence',
-      definition: 'Unstable air behind cars causing performance drop for following vehicles.',
-      category: 'Aerodynamics',
-      icon: Wind  
-    },                            
-
-    // Rules & Regulations
-    {
-      term: 'Parc Fermé',
-      definition: 'Restricted area where cars are held and cannot be modified between qualifying and race',
-      category: 'Rules',
-      icon: Shield
-    },
-    {
-      term: 'Track Limits',
-      definition: 'The defined boundaries of the racing circuit that drivers must stay within',
-      category: 'Rules',
-      icon: MapPin
-    },
-    {
-      term: 'Blue Flag',
-      definition: 'Flag shown to backmarkers to let faster cars through when being lapped',
-      category: 'Rules',
-      icon: Flag
-    },
-    {
-      term: 'Yellow Flag',
-      definition: 'Caution flag indicating danger ahead - no overtaking allowed in that sector',
-      category: 'Rules',
-      icon: Flag
-    },
-    {
-      term: 'Red Flag',
-      definition: 'Flag that stops the session immediately due to dangerous conditions or serious incident',
-      category: 'Rules',
-      icon: Flag
-    },
-    {
-      term: 'Drive-Through Penalty',
-      definition: 'Penalty requiring a driver to drive through the pit lane without stopping.',
-      category: 'Rules',
-    icon: AlertTriangle
-    },    
-
-    // Safety
-    {
-      term: 'Safety Car',
-      definition: 'Official car deployed to neutralize the race during dangerous conditions while keeping cars running',
-      category: 'Safety',
-      icon: Car
-    },
-    {
-      term: 'Virtual Safety Car',
-      definition: 'Electronic system that controls car speeds during caution periods without a physical safety car',
-      category: 'Safety',
-      icon: Gauge
-    },
-    {
-      term: 'Halo',
-      definition: 'Titanium head protection device that sits above the cockpit to protect drivers from debris',
-      category: 'Safety',
-      icon: Shield
-    },
-    {
-      term: 'Marshals',
-      definition: 'Track officials responsible for safety, recovery of broken-down cars, and flag signals',
-      category: 'Safety',
-      icon: Users
-    },
-    {
-  term: 'Red Flag Procedure',
-  definition: 'Protocol followed when a session is stopped, including pit lane entry and no overtaking.',
-  category: 'Safety',
-  icon: Shield
-},
-
-    // Communication & Terms
-    {
-      term: 'Radio Check',
-      definition: 'Communication test between driver and pit crew to ensure clear radio contact',
-      category: 'Communication',
-      icon: Radio
-    },
-    {
-      term: 'Copy',
-      definition: 'Radio confirmation that a message has been received and understood',
-      category: 'Communication',
-      icon: Radio
-    },
-    {
-      term: 'Gap',
-      definition: 'The time difference between two cars, usually measured in seconds',
-      category: 'Communication',
-      icon: Timer
-    },
-    {
-      term: 'Purple Sector',
-      definition: 'The fastest sector time during a session, displayed in purple on timing screens',
-      category: 'Communication',
-      icon: Trophy
-    },
-{
-  term: 'Push Now',
-  definition: 'Instruction to the driver to give maximum effort for a lap or stint.',
-  category: 'Communication',
-  icon: Radio
-},
-
-    // Track & Racing Terms
-    {
-      term: 'Chicane',
-      definition: 'A tight sequence of corners in alternate directions designed to slow cars down',
-      category: 'Track Terms',
-      icon: MapPin
-    },
-    {
-      term: 'Hairpin',
-      definition: 'A very tight, slow corner that turns back on itself, usually 180 degrees',
-      category: 'Track Terms',
-      icon: MapPin
-    },
-    {
-      term: 'Apex',
-      definition: 'The geometric center or ideal turning point of a corner for the fastest racing line',
-      category: 'Track Terms',
-      icon: Target
-    },
-    {
-      term: 'Racing Line',
-      definition: 'The fastest route around a circuit, maximizing speed through corners and straights',
-      category: 'Track Terms',
-      icon: MapPin
-    },
-    {
-      term: 'Kerbs',
-      definition: 'Raised strips at corner edges that drivers can use to maximize the racing line',
-      category: 'Track Terms',
-      icon: MapPin
-    },
-    {
-  term: 'Sector',
-  definition: 'A racetrack is divided into three sectors for timing and analysis.',
-  category: 'Track Terms',
-  icon: MapPin
-},
-
-  //Slangs
-  {
-  term: 'GOAT',
-  definition: 'Acronym for "Greatest of All Time", often used for legendary drivers like Schumacher or Hamilton.',
-  category: 'Slang',
-  icon: Trophy
-},
-{
-  term: 'Clown Fiesta',
-  definition: 'Social media slang for a chaotic or mismanaged race.',
-  category: 'Slang',
-  icon: AlertTriangle
-},
-{
-  term: 'Merchant',
-  definition: 'Joking term for a driver known for one strong trait, e.g. "Wet weather merchant".',
-  category: 'Slang',
-  icon: Users
-},
-{
-  term: 'WDC / WCC',
-  definition: 'Abbreviations for World Drivers’ Championship and World Constructors’ Championship.',
-  category: 'Slang',
-  icon: Flag
-},
-{
-  term: 'Cooked',
-  definition: 'Used to describe a ruined strategy, tire, or driver stint. E.g., "His tires are cooked."',
-  category: 'Slang',
-  icon: Gauge
-},
-{
-  term: 'Bottled It',
-  definition: 'Slang for when a driver fails under pressure or makes a costly error.',
-  category: 'Slang',
-  icon: AlertTriangle
-},
-{
-  term: 'Masterclass',
-  definition: 'Social term used to describe a dominant performance, e.g. “Verstappen gave a masterclass today.”',
-  category: 'Slang',
-  icon: Trophy
-}
-  ];
-
-  const categories = [...new Set(terms.map(term => term.category))];
-
-  const filteredTerms = terms.filter(term => {
-    const matchesSearch = term.term.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      term.definition.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      term.category.toLowerCase().includes(searchTerm.toLowerCase());
+  // Load terms from Firebase
+  useEffect(() => {
+    const loadTerms = async () => {
+      setIsLoading(true);
+      try {
+        const allTerms = await fetchAllTerms();
+        setTerms(allTerms);
+        
+        // Extract unique categories
+        const uniqueCategories = [...new Set(allTerms.map(term => term.category))];
+        setCategories(uniqueCategories);
+        
+        setFilteredTerms(allTerms);
+      } catch (error) {
+        console.error("Failed to load terms:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
     
-    const matchesCategory = selectedCategory === 'all' || term.category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
-  });
+    loadTerms();
+  }, []);
+
+  // Filter terms based on search and category
+  useEffect(() => {
+    const filterTerms = async () => {
+      if (searchTerm) {
+        const searchedTerms = await searchTerms(searchTerm);
+        const filtered = selectedCategory === 'all' 
+          ? searchedTerms 
+          : searchedTerms.filter(term => term.category === selectedCategory);
+        setFilteredTerms(filtered);
+      } else {
+        const termsToFilter = selectedCategory === 'all' 
+          ? terms 
+          : await fetchTermsByCategory(selectedCategory);
+        setFilteredTerms(termsToFilter);
+      }
+    };
+
+    filterTerms();
+  }, [searchTerm, selectedCategory, terms]);
 
   const getCategoryColor = (category: string) => {
     const colors = {
@@ -375,20 +94,31 @@ const Terms = () => {
       'Rules': 'border-yellow-500 text-yellow-600 hover:bg-yellow-500/5',
       'Safety': 'border-orange-500 text-orange-600 hover:bg-orange-500/5',
       'Communication': 'border-cyan-500 text-cyan-600 hover:bg-cyan-500/5',
-      'Track Terms': 'border-indigo-500 text-indigo-600 hover:bg-indigo-500/5'
+      'Track Terms': 'border-indigo-500 text-indigo-600 hover:bg-indigo-500/5',
+      'Slang': 'border-pink-500 text-pink-600 hover:bg-pink-500/5'
     };
     return colors[category as keyof typeof colors] || 'border-gray-500 text-gray-600 hover:bg-gray-500/5';
   };
 
   const getCategoryStats = () => {
-    const stats = categories.map(category => ({
+    return categories.map(category => ({
       name: category,
       count: terms.filter(term => term.category === category).length
     }));
-    return stats;
   };
 
- return (
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading F1 terminology...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-border/50">
@@ -473,14 +203,14 @@ const Terms = () => {
             {/* Terms Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredTerms.map((termData, index) => {
-                const Icon = termData.icon;
+                const IconComponent = iconComponents[termData.icon] || Flag;
                 return (
                   <Card key={index} className="group relative overflow-hidden bg-card border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
                     <CardHeader className="pb-4">
                       <div className="flex items-start gap-4">
                         {/* Icon */}
                         <div className="flex-shrink-0 w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
-                          <Icon className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
+                          <IconComponent className="h-5 w-5 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
                         </div>
                         
                         <div className="flex-1 min-w-0">
