@@ -166,61 +166,40 @@
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
- {flags.map((flag) => {
-  const IconComponent = iconComponents[flag.icon] || Flag;
-  const isGradient = flag.color.includes("gradient");
-  const hasOrangeDot = (flag as any).hasOrangeDot; // Type assertion for custom field
-
-  return (
-    <Card key={flag.name} className="group relative overflow-hidden">
-      {/* Color strip */}
-      <div 
-        className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}
-        style={isGradient ? { 
-          backgroundImage: 'linear-gradient(to right, #000000, #ffffff)' 
-        } : {}}
-      ></div>
-      
-      <CardHeader>
-        <div className="flex items-center gap-4">
-          {/* Flag icon with special handling */}
-          <div className="relative">
-            <div 
-              className={`p-3 rounded-xl ${flag.color} text-white flex items-center justify-center`}
-              style={isGradient ? { 
-                backgroundImage: 'linear-gradient(to right, #000000, #ffffff)' 
-              } : {}}
-            >
-              {hasOrangeDot ? (
-                <>
-                  <div className="absolute w-6 h-6 rounded-full bg-orange-500"></div>
-                  <IconComponent className="relative z-10 h-6 w-6" />
-                </>
-              ) : (
-                <IconComponent className="h-6 w-6" />
-              )}
-            </div>
-          </div>
-          
-          <div>
-            <CardTitle>{flag.name}</CardTitle>
-            <Badge 
-  variant="outline" 
-  className="border-red-500 text-red-600 bg-white hover:bg-white mt-2"
->
-  {flag.category}
-</Badge>
-          </div>
-        </div>
-      </CardHeader>
-      
-      <CardContent>
-        <p>{flag.description}</p>
-        <p className="text-sm mt-2 whitespace-pre-line">{flag.usage}</p>
-      </CardContent>
-    </Card>
-  );
-})}
+                {flags.map((flag, index) => {
+                  const IconComponent = iconComponents[flag.icon] || Flag;
+                  return (
+                    <Card key={index} className="group relative overflow-hidden border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:rotate-1">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <div className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}></div>
+                      
+                      <CardHeader className="relative z-10 pb-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center space-x-4">
+                            <div className={`p-4 rounded-2xl ${flag.color} text-white shadow-xl group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
+                              <IconComponent className="h-6 w-6" />
+                            </div>
+                            <div>
+                              <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">{flag.name}</CardTitle>
+                              <Badge variant="outline" className="mt-2 border-primary/30 bg-primary/10 text-primary font-medium">{flag.category}</Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      <CardContent className="relative z-10 space-y-4">
+                        <div className="bg-gradient-to-r from-muted/50 to-muted/30 p-4 rounded-xl border border-border/50">
+                          <p className="font-semibold text-foreground mb-2">{flag.description}</p>
+                        </div>
+                        <div className="bg-gradient-to-r from-accent/10 to-primary/10 p-4 rounded-xl border border-primary/20">
+                          <p className="text-sm text-muted-foreground leading-relaxed">{flag.usage}</p>
+                        </div>
+                      </CardContent>
+                      
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
+                    </Card>
+                  );
+                })}
               </div>
             </TabsContent>
 

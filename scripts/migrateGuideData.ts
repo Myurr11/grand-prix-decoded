@@ -21,7 +21,7 @@ const essentialTopics = [
   {
     id: 'intro',
     title: 'What is Formula 1?',
-    icon: 'BookOpen',
+    icon: 'BookOpen', // Change to your preferred icon name
     color: 'bg-blue-500',
     gradient: 'from-blue-500 to-blue-600',
     description: 'An introduction to the world of Formula 1 racing',
