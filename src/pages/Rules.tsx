@@ -1,283 +1,85 @@
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Shield, Flag, AlertTriangle, BookOpen, Scale, Clock, Car, Zap, Download, FileText, Eye, RotateCcw, Triangle, X, Minus, CircleDot, Users, Fuel, Timer, Target } from 'lucide-react';
+import { Shield, Flag, AlertTriangle, BookOpen, Scale, Clock, Car, Zap, Download, FileText, Eye, Users, Fuel, Timer, Target, CircleDot, Minus, X } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  fetchFlags,
+  fetchPenalties,
+  fetchSportingRegulations,
+  fetchTechnicalRegulations,
+  FlagData,
+  fetchProcedureRegulations,
+  Penalty,
+  Regulation
+} from '@/services/rulesService';
+
+// Map icon strings to actual components
+const iconComponents: Record<string, React.ComponentType<any>> = {
+  'Flag': Flag,
+  'AlertTriangle': AlertTriangle,
+  'Clock': Clock,
+  'Target': Target,
+  'Zap': Zap,
+  'Car': Car,
+  'Minus': Minus,
+  'X': X,
+  'FileText': FileText,
+  'CircleDot': CircleDot
+};
 
 const Rules = () => {
-  // Complete F1 Flag definitions
-  const flags = [
-    {
-      name: 'Red Flag',
-      color: 'bg-red-600',
-      icon: Flag,
-      description: 'Session suspended. All cars must return to pit lane immediately.',
-      usage: 'Used when track conditions are unsafe to continue racing or in case of a serious incident.',
-      category: 'Emergency'
-    },
-    {
-      name: 'Yellow Flag',
-      color: 'bg-yellow-500',
-      icon: Flag,
-      description: 'Danger on track. Reduce speed, no overtaking.',
-      usage: 'Displayed when there is an incident or hazard on or near the track.',
-      category: 'Caution'
-    },
-    {
-      name: 'Double Yellow Flags',
-      color: 'bg-yellow-500',
-      icon: Flag,
-      description: 'Serious hazard. Be prepared to stop. No overtaking.',
-      usage: 'Shown when there is a major incident or when marshals are working on or near the track.',
-      category: 'Caution'
-    },
-    {
-      name: 'Green Flag',
-      color: 'bg-green-600',
-      icon: Flag,
-      description: 'Track clear. Racing conditions resume.',
-      usage: 'Displayed after a yellow flag section to indicate normal racing can resume.',
-      category: 'All Clear'
-    },
-    {
-      name: 'Blue Flag',
-      color: 'bg-blue-600',
-      icon: Flag,
-      description: 'Faster car approaching to lap you. Let them pass.',
-      usage: 'Shown to a driver who is about to be lapped and must allow the faster car to pass at the first opportunity.',
-      category: 'Information'
-    },
-    {
-      name: 'White Flag',
-      color: 'bg-gray-300 text-gray-800',
-      icon: Flag,
-      description: 'Slow-moving vehicle on track.',
-      usage: 'Indicates there is an ambulance, recovery vehicle, or official car on the racing circuit.',
-      category: 'Information'
-    },
-    {
-      name: 'Black & White Flag',
-      color: 'bg-gray-900',
-      icon: Flag,
-      description: 'Warning for unsportsmanlike behavior.',
-      usage: 'Final warning before penalties are applied for driving infractions.',
-      category: 'Warning'
-    },
-    {
-      name: 'Black Flag',
-      color: 'bg-black',
-      icon: Flag,
-      description: 'Driver disqualified. Return to pits immediately.',
-      usage: 'Shown when a driver has been disqualified from the race for a serious rule violation.',
-      category: 'Disqualification'
-    },
-    {
-      name: 'Black Flag with Orange Circle',
-      color: 'bg-black',
-      icon: CircleDot,
-      description: 'Mechanical problem suspected. Return to pits for inspection.',
-      usage: 'Displayed when officials suspect a car has a mechanical issue that could be dangerous.',
-      category: 'Technical'
-    },
-    {
-      name: 'Chequered Flag',
-      color: 'bg-gray-800',
-      icon: Flag,
-      description: 'End of session or race.',
-      usage: 'Waved to signal the completion of a practice session, qualifying, or race.',
-      category: 'Finish'
-    }
-  ];
+  const [flags, setFlags] = useState<FlagData[]>([]);
+  const [penalties, setPenalties] = useState<Penalty[]>([]);
+  const [sportingRegulations, setSportingRegulations] = useState<Regulation[]>([]);
+  const [technicalRegulations, setTechnicalRegulations] = useState<Regulation[]>([]);
+  const [procedureRegulations, setProcedureRegulations] = useState<Regulation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Complete F1 Penalty definitions
-  const penalties = [
-    {
-      name: 'Time Penalties',
-      icon: Clock,
-      color: 'bg-orange-500/10 text-orange-600 border-orange-500/20',
-      description: 'Added time to a driver\'s race result or served during pit stops',
-      examples: [
-        { penalty: '5-Second Penalty', description: 'Track limits violations, minor collisions, unsafe releases' },
-        { penalty: '10-Second Penalty', description: 'Causing collisions, forcing another driver off track' },
-        { penalty: '20-Second Penalty', description: 'Serious driving infractions or multiple offenses' },
-        { penalty: '30-Second Penalty', description: 'Severe breaches of sporting regulations' }
-      ]
-    },
-    {
-      name: 'Stop & Go Penalties',
-      icon: Target,
-      color: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-      description: 'Driver must enter pit lane, stop for specified time, then continue',
-      examples: [
-        { penalty: '5-Second Stop & Go', description: 'Pit lane speeding or unsafe pit releases' },
-        { penalty: '10-Second Stop & Go', description: 'False starts or causing avoidable collisions' }
-      ]
-    },
-    {
-      name: 'Drive-Through Penalty',
-      icon: Zap,
-      color: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-      description: 'Driver must pass through the pit lane without stopping',
-      examples: [
-        { penalty: 'False Start', description: 'Moving before the lights go out at race start' },
-        { penalty: 'Pit Lane Speeding', description: 'Exceeding the pit lane speed limit' },
-        { penalty: 'Jump Start', description: 'Leaving grid position before formation lap' }
-      ]
-    },
-    {
-      name: 'Grid Penalties',
-      icon: Car,
-      color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20',
-      description: 'Starting positions moved back on the grid',
-      examples: [
-        { penalty: '3-Place Grid Penalty', description: 'Impeding during qualifying sessions' },
-        { penalty: '5-Place Grid Penalty', description: 'Unscheduled gearbox changes' },
-        { penalty: '10-Place Grid Penalty', description: 'Engine component changes beyond allocation' },
-        { penalty: 'Back of Grid', description: 'Multiple power unit component changes' }
-      ]
-    },
-    {
-      name: 'Championship Point Deductions',
-      icon: Minus,
-      color: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
-      description: 'Points removed from driver or constructor standings',
-      examples: [
-        { penalty: 'Driver Points Deduction', description: 'Serious breaches of sporting conduct' },
-        { penalty: 'Constructor Points Deduction', description: 'Technical regulation violations' }
-      ]
-    },
-    {
-      name: 'Race Bans & Suspensions',
-      icon: X,
-      color: 'bg-red-500/10 text-red-600 border-red-500/20',
-      description: 'Exclusion from racing events',
-      examples: [
-        { penalty: 'Race Ban', description: 'Accumulating 12 penalty points in 12 months' },
-        { penalty: 'Season Suspension', description: 'Extremely serious misconduct or safety violations' }
-      ]
-    },
-    {
-      name: 'Disqualification',
-      icon: AlertTriangle,
-      color: 'bg-red-500/10 text-red-600 border-red-500/20',
-      description: 'Exclusion from session or race results',
-      examples: [
-        { penalty: 'Session Disqualification', description: 'Technical infringements or dangerous driving' },
-        { penalty: 'Race Disqualification', description: 'Car fails post-race scrutineering' },
-        { penalty: 'Championship Exclusion', description: 'Systematic rule violations' }
-      ]
-    },
-    {
-      name: 'Financial Penalties',
-      icon: FileText,
-      color: 'bg-green-500/10 text-green-600 border-green-500/20',
-      description: 'Monetary fines imposed on drivers or teams',
-      examples: [
-        { penalty: 'Driver Fine', description: 'Minor protocol violations or unsportsmanlike conduct' },
-        { penalty: 'Team Fine', description: 'Administrative breaches or equipment violations' }
-      ]
-    }
-  ];
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const [
+          flagsData,
+          penaltiesData,
+          sportingData,
+          technicalData,
+          procedureData
+        ] = await Promise.all([
+          fetchFlags(),
+          fetchPenalties(),
+          fetchSportingRegulations(),
+          fetchTechnicalRegulations(),
+          fetchProcedureRegulations()
+        ]);
 
-  // Comprehensive F1 Racing Regulations
-  const sportingRegulations = [
-    {
-      title: 'Track Limits & Racing Surface',
-      description: 'Drivers must keep all four wheels within the white lines. Track limits violations result in warnings, then time penalties.',
-      details: 'Consistently exceeding track limits at the same corner can lead to time penalties or lap time deletions.'
-    },
-    {
-      title: 'Overtaking & Racing Conduct',
-      description: 'Drivers must leave racing room when alongside another car. Forcing a driver off track is prohibited.',
-      details: 'The driver on the outside must be left at least one car width of space if they are significantly alongside.'
-    },
-    {
-      title: 'Blue Flag Procedures',
-      description: 'Lapped drivers must allow faster cars to pass within 3 marshal posts after being shown the blue flag.',
-      details: 'Failure to comply can result in time penalties. The blue flag system uses electronic detection.'
-    },
-    {
-      title: 'Safety Car & Virtual Safety Car',
-      description: 'During SC periods, no overtaking allowed. Under VSC, drivers must maintain minimum sector times.',
-      details: 'Cars must maintain specific distances and cannot gain advantage during safety car periods.'
-    },
-    {
-      title: 'DRS (Drag Reduction System)',
-      description: 'Can only be used in designated zones when within 1 second of car ahead at detection point.',
-      details: 'DRS is disabled during yellow flag conditions and first two laps after race start or restart.'
-    },
-    {
-      title: 'Formation Lap & Race Start',
-      description: 'Drivers must maintain grid position during formation lap. No practice starts allowed.',
-      details: 'Jump starts or gaining positions during formation lap result in penalties.'
-    }
-  ];
+        setFlags(flagsData);
+        setPenalties(penaltiesData);
+        setSportingRegulations(sportingData);
+        setTechnicalRegulations(technicalData);
+        setProcedureRegulations(procedureData);
+      } catch (error) {
+        console.error("Failed to load rules data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const technicalRegulations = [
-    {
-      title: 'Car Dimensions & Weight',
-      description: 'Minimum weight 798kg including driver. Strict dimensional requirements for aerodynamics.',
-      details: 'Cars are measured and weighed before and after each session to ensure compliance.'
-    },
-    {
-      title: 'Power Unit Regulations',
-      description: 'Hybrid power units with strict component allocation limits per season.',
-      details: 'Exceeding allocation results in grid penalties. Fuel flow limited to 100kg/h maximum.'
-    },
-    {
-      title: 'Aerodynamic Regulations',
-      description: 'Specific rules governing front wing, rear wing, floor, and bodywork design.',
-      details: 'All aerodynamic components must pass rigorous scrutineering and deflection tests.'
-    },
-    {
-      title: 'Tire Regulations',
-      description: 'Mandatory tire allocation for practice, qualifying, and race with specific compound requirements.',
-      details: 'Q2 tire rule requires top 10 qualifiers to start race on their Q2 qualifying tire.'
-    },
-    {
-      title: 'Parc Fermé Conditions',
-      description: 'After qualifying, car setup cannot be changed except for specific allowed adjustments.',
-      details: 'Limited to front wing angle, tire pressure, and specific safety-related modifications.'
-    },
-    {
-      title: 'Fuel & Refueling',
-      description: 'No refueling during race. Maximum 110kg of fuel allowed for race start.',
-      details: 'Fuel samples are taken for analysis to ensure compliance with technical regulations.'
-    }
-  ];
+    loadData();
+  }, []);
 
-  const procedureRegulations = [
-    {
-      title: 'Qualifying Format',
-      description: 'Three knockout sessions (Q1, Q2, Q3) with specific time allocations and elimination rules.',
-      details: 'Q1: 18 minutes, eliminate slowest 5. Q2: 15 minutes, eliminate next 5. Q3: 12 minutes, top 10 fight for pole.'
-    },
-    {
-      title: 'Pit Lane Procedures',
-      description: 'Speed limits enforced electronically. Specific rules for pit entry, stops, and exit.',
-      details: 'Pit lane speed limit varies by circuit (60-80 km/h). Unsafe releases result in penalties.'
-    },
-    {
-      title: 'Scrutineering Process',
-      description: 'Mandatory technical inspections before and after sessions to ensure regulatory compliance.',
-      details: 'Random cars selected for detailed scrutineering including weight, dimensions, and component checks.'
-    },
-    {
-      title: 'Driver Equipment',
-      description: 'Strict safety requirements for helmets, HANS device, racing suits, and other protective gear.',
-      details: 'All equipment must meet FIA safety standards and be approved before use in competition.'
-    },
-    {
-      title: 'Communication Rules',
-      description: 'Limited radio communication allowed between team and driver during race conditions.',
-      details: 'Certain information prohibited to maintain driver skill importance and prevent excessive assistance.'
-    },
-    {
-      title: 'Medical & Safety Procedures',
-      description: 'Comprehensive medical facilities and extraction procedures required at all circuits.',
-      details: 'Medical helicopter and extraction team must be operational for all sessions to proceed.'
-    }
-  ];
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading F1 regulations...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -321,7 +123,6 @@ const Rules = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-16">
-
         <Tabs defaultValue="flags" className="max-w-7xl mx-auto">
           <TabsList className="grid grid-cols-4 mb-12 bg-muted/50">
             <TabsTrigger value="flags" className="flex items-center space-x-2 data-[state=active]:bg-background">
@@ -340,7 +141,7 @@ const Rules = () => {
               <span className="sm:hidden">Sporting</span>
             </TabsTrigger>
             <TabsTrigger value="technical" className="flex items-center space-x-2 data-[state=active]:bg-background">
-              <BookOpen className="h-4 w-4" />
+              <Car className="h-4 w-4" />
               <span className="hidden sm:inline">Technical Rules</span>
               <span className="sm:hidden">Technical</span>
             </TabsTrigger>
@@ -365,37 +166,40 @@ const Rules = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {flags.map((flag, index) => (
-                <Card key={index} className="group relative overflow-hidden border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:rotate-1">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}></div>
-                  
-                  <CardHeader className="relative z-10 pb-4">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-4">
-                        <div className={`p-4 rounded-2xl ${flag.color} text-white shadow-xl group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
-                          <flag.icon className="h-6 w-6" />
-                        </div>
-                        <div>
-                          <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">{flag.name}</CardTitle>
-                          <Badge variant="outline" className="mt-2 border-primary/30 bg-primary/10 text-primary font-medium">{flag.category}</Badge>
+              {flags.map((flag, index) => {
+                const IconComponent = iconComponents[flag.icon] || Flag;
+                return (
+                  <Card key={index} className="group relative overflow-hidden border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:rotate-1">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}></div>
+                    
+                    <CardHeader className="relative z-10 pb-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className={`p-4 rounded-2xl ${flag.color} text-white shadow-xl group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
+                            <IconComponent className="h-6 w-6" />
+                          </div>
+                          <div>
+                            <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">{flag.name}</CardTitle>
+                            <Badge variant="outline" className="mt-2 border-primary/30 bg-primary/10 text-primary font-medium">{flag.category}</Badge>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="relative z-10 space-y-4">
-                    <div className="bg-gradient-to-r from-muted/50 to-muted/30 p-4 rounded-xl border border-border/50">
-                      <p className="font-semibold text-foreground mb-2">{flag.description}</p>
-                    </div>
-                    <div className="bg-gradient-to-r from-accent/10 to-primary/10 p-4 rounded-xl border border-primary/20">
-                      <p className="text-sm text-muted-foreground leading-relaxed">{flag.usage}</p>
-                    </div>
-                  </CardContent>
-                  
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
-                </Card>
-              ))}
+                    </CardHeader>
+                    
+                    <CardContent className="relative z-10 space-y-4">
+                      <div className="bg-gradient-to-r from-muted/50 to-muted/30 p-4 rounded-xl border border-border/50">
+                        <p className="font-semibold text-foreground mb-2">{flag.description}</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-accent/10 to-primary/10 p-4 rounded-xl border border-primary/20">
+                        <p className="text-sm text-muted-foreground leading-relaxed">{flag.usage}</p>
+                      </div>
+                    </CardContent>
+                    
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
+                  </Card>
+                );
+              })}
             </div>
           </TabsContent>
 
@@ -418,41 +222,44 @@ const Rules = () => {
             </div>
             
             <div className="space-y-8">
-              {penalties.map((penalty, index) => (
-                <Card key={index} className="group relative overflow-hidden bg-gradient-to-r from-background to-background/50 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:scale-[1.02] border-l-4 border-l-red-500">
-                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <CardHeader className="relative z-10 pb-6">
-                    <div className="flex items-start space-x-6">
-                      <div className={`p-5 rounded-2xl ${penalty.color} shadow-xl group-hover:scale-110 transition-transform duration-300 border border-border/50`}>
-                        <penalty.icon className="h-8 w-8" />
-                      </div>
-                      <div className="flex-1">
-                        <CardTitle className="text-2xl mb-3 group-hover:text-red-600 transition-colors duration-300">{penalty.name}</CardTitle>
-                        <CardDescription className="text-lg text-muted-foreground leading-relaxed">
-                          {penalty.description}
-                        </CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="relative z-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {penalty.examples.map((example, exampleIndex) => (
-                        <div key={exampleIndex} className="group/example bg-gradient-to-br from-muted/30 to-muted/20 p-5 rounded-xl border border-border/30 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300">
-                          <div className="flex items-center mb-3">
-                            <div className="w-2 h-2 bg-red-500 rounded-full mr-3 group-hover/example:scale-125 transition-transform duration-300"></div>
-                            <h4 className="font-bold text-foreground group-hover/example:text-red-600 transition-colors duration-300">{example.penalty}</h4>
-                          </div>
-                          <p className="text-sm text-muted-foreground leading-relaxed">{example.description}</p>
+              {penalties.map((penalty, index) => {
+                const IconComponent = iconComponents[penalty.icon] || AlertTriangle;
+                return (
+                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-r from-background to-background/50 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:scale-[1.02] border-l-4 border-l-red-500">
+                    <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    
+                    <CardHeader className="relative z-10 pb-6">
+                      <div className="flex items-start space-x-6">
+                        <div className={`p-5 rounded-2xl ${penalty.color} shadow-xl group-hover:scale-110 transition-transform duration-300 border border-border/50`}>
+                          <IconComponent className="h-8 w-8" />
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                  
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-red-500/10 to-transparent rounded-full blur-3xl -translate-y-20 translate-x-20 group-hover:scale-150 transition-transform duration-700" />
-                </Card>
-              ))}
+                        <div className="flex-1">
+                          <CardTitle className="text-2xl mb-3 group-hover:text-red-600 transition-colors duration-300">{penalty.name}</CardTitle>
+                          <CardDescription className="text-lg text-muted-foreground leading-relaxed">
+                            {penalty.description}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="relative z-10">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {penalty.examples.map((example, exampleIndex) => (
+                          <div key={exampleIndex} className="group/example bg-gradient-to-br from-muted/30 to-muted/20 p-5 rounded-xl border border-border/30 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300">
+                            <div className="flex items-center mb-3">
+                              <div className="w-2 h-2 bg-red-500 rounded-full mr-3 group-hover/example:scale-125 transition-transform duration-300"></div>
+                              <h4 className="font-bold text-foreground group-hover/example:text-red-600 transition-colors duration-300">{example.penalty}</h4>
+                            </div>
+                            <p className="text-sm text-muted-foreground leading-relaxed">{example.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                    
+                    <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-red-500/10 to-transparent rounded-full blur-3xl -translate-y-20 translate-x-20 group-hover:scale-150 transition-transform duration-700" />
+                  </Card>
+                );
+              })}
             </div>
           </TabsContent>
 
@@ -560,7 +367,6 @@ const Rules = () => {
             </div>
             
             <div className="relative">
-              {/* Technical regulation cards with hexagonal grid layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                 {technicalRegulations.map((regulation, index) => (
                   <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-orange-50/30 to-yellow-50/30 dark:from-orange-950/20 dark:to-yellow-950/20 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-700 hover:scale-110 hover:-rotate-2 border-2 border-orange-200/50 dark:border-orange-800/50">
