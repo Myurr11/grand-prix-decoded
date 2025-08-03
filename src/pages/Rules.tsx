@@ -1,516 +1,537 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Shield, Flag, AlertTriangle, BookOpen, Scale, Clock, Car, Zap, Download, FileText, Eye, Users, Fuel, Timer, Target, CircleDot, Minus, X } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  fetchFlags,
-  fetchPenalties,
-  fetchSportingRegulations,
-  fetchTechnicalRegulations,
-  FlagData,
-  fetchProcedureRegulations,
-  Penalty,
-  Regulation
-} from '@/services/rulesService';
+  import { useState, useEffect } from 'react';
+  import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+  import { Badge } from '@/components/ui/badge';
+  import { Button } from '@/components/ui/button';
+  import { Shield, Flag, AlertTriangle, BookOpen, Scale, Clock, Car, Zap, Download, FileText, Eye, Users, Fuel, Timer, Target, CircleDot, Minus, X } from 'lucide-react';
+  import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+  import {
+    fetchFlags,
+    fetchPenalties,
+    fetchSportingRegulations,
+    fetchTechnicalRegulations,
+    FlagData,
+    fetchProcedureRegulations,
+    Penalty,
+    Regulation
+  } from '@/services/rulesService';
 
-// Map icon strings to actual components
-const iconComponents: Record<string, React.ComponentType<any>> = {
-  'Flag': Flag,
-  'AlertTriangle': AlertTriangle,
-  'Clock': Clock,
-  'Target': Target,
-  'Zap': Zap,
-  'Car': Car,
-  'Minus': Minus,
-  'X': X,
-  'FileText': FileText,
-  'CircleDot': CircleDot
-};
+  // Map icon strings to actual components
+  const iconComponents: Record<string, React.ComponentType<any>> = {
+    'Flag': Flag,
+    'AlertTriangle': AlertTriangle,
+    'Clock': Clock,
+    'Target': Target,
+    'Zap': Zap,
+    'Car': Car,
+    'Minus': Minus,
+    'X': X,
+    'FileText': FileText,
+    'CircleDot': CircleDot
+  };
 
-const Rules = () => {
-  const [flags, setFlags] = useState<FlagData[]>([]);
-  const [penalties, setPenalties] = useState<Penalty[]>([]);
-  const [sportingRegulations, setSportingRegulations] = useState<Regulation[]>([]);
-  const [technicalRegulations, setTechnicalRegulations] = useState<Regulation[]>([]);
-  const [procedureRegulations, setProcedureRegulations] = useState<Regulation[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const Rules = () => {
+    const [flags, setFlags] = useState<FlagData[]>([]);
+    const [penalties, setPenalties] = useState<Penalty[]>([]);
+    const [sportingRegulations, setSportingRegulations] = useState<Regulation[]>([]);
+    const [technicalRegulations, setTechnicalRegulations] = useState<Regulation[]>([]);
+    const [procedureRegulations, setProcedureRegulations] = useState<Regulation[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
-      try {
-        const [
-          flagsData,
-          penaltiesData,
-          sportingData,
-          technicalData,
-          procedureData
-        ] = await Promise.all([
-          fetchFlags(),
-          fetchPenalties(),
-          fetchSportingRegulations(),
-          fetchTechnicalRegulations(),
-          fetchProcedureRegulations()
-        ]);
+    useEffect(() => {
+      const loadData = async () => {
+        setIsLoading(true);
+        try {
+          const [
+            flagsData,
+            penaltiesData,
+            sportingData,
+            technicalData,
+            procedureData
+          ] = await Promise.all([
+            fetchFlags(),
+            fetchPenalties(),
+            fetchSportingRegulations(),
+            fetchTechnicalRegulations(),
+            fetchProcedureRegulations()
+          ]);
 
-        setFlags(flagsData);
-        setPenalties(penaltiesData);
-        setSportingRegulations(sportingData);
-        setTechnicalRegulations(technicalData);
-        setProcedureRegulations(procedureData);
-      } catch (error) {
-        console.error("Failed to load rules data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+          setFlags(flagsData);
+          setPenalties(penaltiesData);
+          setSportingRegulations(sportingData);
+          setTechnicalRegulations(technicalData);
+          setProcedureRegulations(procedureData);
+        } catch (error) {
+          console.error("Failed to load rules data:", error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-    loadData();
-  }, []);
+      loadData();
+    }, []);
 
-  if (isLoading) {
+    if (isLoading) {
+      return (
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading F1 regulations...</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground">Loading F1 regulations...</p>
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+          <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px] opacity-20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+          
+          <div className="relative container mx-auto px-4 py-24 lg:py-32">
+            <div className="text-center max-w-4xl mx-auto">
+              <Badge variant="outline" className="mb-6 px-4 py-2 text-sm font-medium border-primary/20 bg-primary/5">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Official F1 Regulations
+              </Badge>
+              
+              <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
+                <span className="bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+                  Formula 1
+                </span>
+                <br />
+                <span className="text-foreground">Rules & Regulations</span>
+              </h1>
+              
+              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
+                Complete guide to Formula 1 flags, penalties, sporting regulations, and technical rules governing the pinnacle of motorsport.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button size="lg" className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 h-auto">
+                  <Download className="h-5 w-5 mr-2 group-hover:translate-y-0.5 transition-transform" />
+                  Download Official FIA Rulebook 2024
+                </Button>
+                <Button size="lg" variant="outline" className="px-8 py-3 h-auto">
+                  <Eye className="h-5 w-5 mr-2" />
+                  View Quick Reference
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="container mx-auto px-4 py-16">
+          <Tabs defaultValue="flags" className="max-w-7xl mx-auto">
+            <TabsList className="grid grid-cols-4 mb-12 bg-muted/50">
+              <TabsTrigger value="flags" className="flex items-center space-x-2 data-[state=active]:bg-background">
+                <Flag className="h-4 w-4" />
+                <span className="hidden sm:inline">Race Flags</span>
+                <span className="sm:hidden">Flags</span>
+              </TabsTrigger>
+              <TabsTrigger value="penalties" className="flex items-center space-x-2 data-[state=active]:bg-background">
+                <Scale className="h-4 w-4" />
+                <span className="hidden sm:inline">Penalties</span>
+                <span className="sm:hidden">Penalties</span>
+              </TabsTrigger>
+              <TabsTrigger value="sporting" className="flex items-center space-x-2 data-[state=active]:bg-background">
+                <Users className="h-4 w-4" />
+                <span className="hidden sm:inline">Sporting Rules</span>
+                <span className="sm:hidden">Sporting</span>
+              </TabsTrigger>
+              <TabsTrigger value="technical" className="flex items-center space-x-2 data-[state=active]:bg-background">
+                <Car className="h-4 w-4" />
+                <span className="hidden sm:inline">Technical Rules</span>
+                <span className="sm:hidden">Technical</span>
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Flags Tab */}
+            <TabsContent value="flags" className="space-y-8">
+              <div className="text-center mb-12">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border/50"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                      <Flag className="h-5 w-5 inline mr-2 text-primary" />
+                      Formula 1 Race Flags
+                    </span>
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Official Flag Signals</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">Understanding the visual communication system that controls Formula 1 racing</p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+ {flags.map((flag) => {
+  const IconComponent = iconComponents[flag.icon] || Flag;
+  const isGradient = flag.color.includes("gradient");
+  const hasOrangeDot = (flag as any).hasOrangeDot; // Type assertion for custom field
+
+  return (
+    <Card key={flag.name} className="group relative overflow-hidden">
+      {/* Color strip */}
+      <div 
+        className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}
+        style={isGradient ? { 
+          backgroundImage: 'linear-gradient(to right, #000000, #ffffff)' 
+        } : {}}
+      ></div>
+      
+      <CardHeader>
+        <div className="flex items-center gap-4">
+          {/* Flag icon with special handling */}
+          <div className="relative">
+            <div 
+              className={`p-3 rounded-xl ${flag.color} text-white flex items-center justify-center`}
+              style={isGradient ? { 
+                backgroundImage: 'linear-gradient(to right, #000000, #ffffff)' 
+              } : {}}
+            >
+              {hasOrangeDot ? (
+                <>
+                  <div className="absolute w-6 h-6 rounded-full bg-orange-500"></div>
+                  <IconComponent className="relative z-10 h-6 w-6" />
+                </>
+              ) : (
+                <IconComponent className="h-6 w-6" />
+              )}
+            </div>
+          </div>
+          
+          <div>
+            <CardTitle>{flag.name}</CardTitle>
+            <Badge 
+  variant="outline" 
+  className="border-red-500 text-red-600 bg-white hover:bg-white mt-2"
+>
+  {flag.category}
+</Badge>
+          </div>
+        </div>
+      </CardHeader>
+      
+      <CardContent>
+        <p>{flag.description}</p>
+        <p className="text-sm mt-2 whitespace-pre-line">{flag.usage}</p>
+      </CardContent>
+    </Card>
+  );
+})}
+              </div>
+            </TabsContent>
+
+            {/* Penalties Tab */}
+            <TabsContent value="penalties" className="space-y-8">
+              <div className="text-center mb-12">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border/50"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                      <Scale className="h-5 w-5 inline mr-2 text-red-500" />
+                      Formula 1 Penalties
+                    </span>
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">Sanctions & Disciplinary Measures</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">Understanding the enforcement system that ensures fair competition in Formula 1</p>
+              </div>
+              
+              <div className="space-y-8">
+                {penalties.map((penalty, index) => {
+                  const IconComponent = iconComponents[penalty.icon] || AlertTriangle;
+                  return (
+                    <Card key={index} className="group relative overflow-hidden bg-gradient-to-r from-background to-background/50 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:scale-[1.02] border-l-4 border-l-red-500">
+                      <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <CardHeader className="relative z-10 pb-6">
+                        <div className="flex items-start space-x-6">
+                          <div className={`p-5 rounded-2xl ${penalty.color} shadow-xl group-hover:scale-110 transition-transform duration-300 border border-border/50`}>
+                            <IconComponent className="h-8 w-8" />
+                          </div>
+                          <div className="flex-1">
+                            <CardTitle className="text-2xl mb-3 group-hover:text-red-600 transition-colors duration-300">{penalty.name}</CardTitle>
+                            <CardDescription className="text-lg text-muted-foreground leading-relaxed">
+                              {penalty.description}
+                            </CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      <CardContent className="relative z-10">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {penalty.examples.map((example, exampleIndex) => (
+                            <div key={exampleIndex} className="group/example bg-gradient-to-br from-muted/30 to-muted/20 p-5 rounded-xl border border-border/30 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300">
+                              <div className="flex items-center mb-3">
+                                <div className="w-2 h-2 bg-red-500 rounded-full mr-3 group-hover/example:scale-125 transition-transform duration-300"></div>
+                                <h4 className="font-bold text-foreground group-hover/example:text-red-600 transition-colors duration-300">{example.penalty}</h4>
+                              </div>
+                              <p className="text-sm text-muted-foreground leading-relaxed">{example.description}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                      
+                      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-red-500/10 to-transparent rounded-full blur-3xl -translate-y-20 translate-x-20 group-hover:scale-150 transition-transform duration-700" />
+                    </Card>
+                  );
+                })}
+              </div>
+            </TabsContent>
+
+            {/* Sporting Regulations Tab */}
+            <TabsContent value="sporting" className="space-y-10">
+              <div className="text-center mb-12">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border/50"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                      <Users className="h-5 w-5 inline mr-2 text-blue-600" />
+                      Sporting Regulations
+                    </span>
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Racing Conduct & Procedures</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">Rules governing fair competition, track conduct, and racing procedures</p>
+              </div>
+              
+              {/* Racing Regulations */}
+              <div className="mb-16">
+                <h3 className="text-2xl font-bold mb-8 text-center">
+                  <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">On-Track Racing Rules</span>
+                </h3>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {sportingRegulations.map((regulation, index) => (
+                    <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-blue-50/50 to-white/50 dark:from-blue-950/20 dark:to-background/50 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-105 border-l-4 border-l-blue-500">
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <CardHeader className="relative z-10 pb-4">
+                        <div className="flex items-center space-x-3 mb-3">
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm group-hover:scale-110 transition-transform duration-300">
+                            {index + 1}
+                          </div>
+                          <CardTitle className="text-lg font-bold group-hover:text-blue-600 transition-colors duration-300">{regulation.title}</CardTitle>
+                        </div>
+                        <CardDescription className="text-sm leading-relaxed">{regulation.description}</CardDescription>
+                      </CardHeader>
+                      
+                      <CardContent className="relative z-10">
+                        <div className="bg-gradient-to-r from-blue-500/10 to-blue-400/10 p-4 rounded-xl border border-blue-500/20">
+                          <p className="text-xs text-muted-foreground leading-relaxed">{regulation.details}</p>
+                        </div>
+                      </CardContent>
+                      
+                      <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-blue-500/20 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                    </Card>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Procedure Regulations */}
+              <div>
+                <h3 className="text-2xl font-bold mb-8 text-center">
+                  <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">Race Procedures & Protocols</span>
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {procedureRegulations.map((regulation, index) => (
+                    <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-purple-50/50 to-white/50 dark:from-purple-950/20 dark:to-background/50 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-500 hover:-translate-y-2 border border-purple-200/50 dark:border-purple-800/50">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <CardHeader className="relative z-10 pb-4">
+                        <div className="flex items-start space-x-4">
+                          <div className="p-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
+                            <Timer className="h-5 w-5" />
+                          </div>
+                          <div className="flex-1">
+                            <CardTitle className="text-xl font-bold group-hover:text-purple-600 transition-colors duration-300 mb-2">{regulation.title}</CardTitle>
+                            <CardDescription className="text-sm leading-relaxed">{regulation.description}</CardDescription>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      <CardContent className="relative z-10">
+                        <div className="bg-gradient-to-r from-purple-500/10 to-purple-400/10 p-5 rounded-xl border border-purple-500/20">
+                          <p className="text-sm text-muted-foreground leading-relaxed font-medium">{regulation.details}</p>
+                        </div>
+                      </CardContent>
+                      
+                      <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-purple-500/15 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </TabsContent>
+
+            {/* Technical Regulations Tab */}
+            <TabsContent value="technical" className="space-y-12">
+              <div className="text-center mb-16">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-border/50"></div>
+                  </div>
+                  <div className="relative flex justify-center">
+                    <span className="bg-background px-6 py-2 rounded-full border border-border/50">
+                      <Car className="h-5 w-5 inline mr-2 text-orange-600" />
+                      Technical Regulations
+                    </span>
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-orange-600 to-yellow-500 bg-clip-text text-transparent">Car Specifications & Technical Compliance</h2>
+                <p className="text-muted-foreground max-w-2xl mx-auto">Engineering standards that govern Formula 1 car design and construction</p>
+              </div>
+              
+              <div className="relative">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                  {technicalRegulations.map((regulation, index) => (
+                    <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-orange-50/30 to-yellow-50/30 dark:from-orange-950/20 dark:to-yellow-950/20 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-700 hover:scale-110 hover:-rotate-2 border-2 border-orange-200/50 dark:border-orange-800/50">
+                      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      {/* Hexagonal accent */}
+                      <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 opacity-20 transform rotate-45 group-hover:scale-125 group-hover:rotate-90 transition-all duration-500"></div>
+                      
+                      <CardHeader className="relative z-10 pb-6">
+                        <div className="flex items-start space-x-4">
+                          <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-yellow-500 text-white shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
+                            <Fuel className="h-6 w-6" />
+                          </div>
+                          <div className="flex-1">
+                            <CardTitle className="text-xl font-bold group-hover:text-orange-600 transition-colors duration-300 mb-3">{regulation.title}</CardTitle>
+                            <div className="w-12 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full group-hover:w-24 transition-all duration-500"></div>
+                          </div>
+                        </div>
+                      </CardHeader>
+                      
+                      <CardContent className="relative z-10 space-y-4">
+                        <div className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 p-5 rounded-2xl border border-orange-500/20 group-hover:border-orange-500/40 transition-all duration-300">
+                          <p className="font-semibold text-foreground mb-3 text-lg leading-relaxed">{regulation.description}</p>
+                        </div>
+                        
+                        <div className="bg-gradient-to-br from-muted/40 to-muted/20 p-5 rounded-2xl border border-border/30 group-hover:bg-orange-500/5 transition-all duration-300">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 group-hover:scale-150 transition-transform duration-300"></div>
+                            <p className="text-sm text-muted-foreground leading-relaxed flex-1">{regulation.details}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                      
+                      {/* Technical circuit pattern */}
+                      <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                      
+                      {/* Glowing orb effect */}
+                      <div className="absolute bottom-4 right-4 w-8 h-8 bg-gradient-to-br from-orange-500/30 to-yellow-500/30 rounded-full blur-lg group-hover:scale-200 transition-transform duration-700"></div>
+                    </Card>
+                  ))}
+                </div>
+                
+                {/* Background tech pattern */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none">
+                  <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_var(--orange-500)_1px,_transparent_1px)] bg-[length:40px_40px]"></div>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+
+          {/* FIA Rulebook Download Section */}
+          <div className="mt-20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-2xl p-8 lg:p-12 border border-primary/10">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="flex justify-center mb-6">
+                <div className="p-4 bg-primary/10 rounded-2xl">
+                  <FileText className="h-12 w-12 text-primary" />
+                </div>
+              </div>
+              <h2 className="text-3xl font-bold mb-4">Official FIA Rulebook 2024</h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Download the complete Formula 1 Sporting and Technical Regulations directly from the FIA. 
+                This comprehensive document contains all official rules governing the championship.
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="bg-background/50 p-6 rounded-xl border">
+                  <BookOpen className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-semibold mb-2">Sporting Regulations</h3>
+                  <p className="text-sm text-muted-foreground">Competition procedures, penalties, and race conduct</p>
+                </div>
+                <div className="bg-background/50 p-6 rounded-xl border">
+                  <Car className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-semibold mb-2">Technical Regulations</h3>
+                  <p className="text-sm text-muted-foreground">Car specifications, safety requirements, and technical compliance</p>
+                </div>
+                <div className="bg-background/50 p-6 rounded-xl border">
+                  <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h3 className="font-semibold mb-2">Safety Standards</h3>
+                  <p className="text-sm text-muted-foreground">Driver equipment, circuit safety, and emergency procedures</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 h-auto">
+                  <Download className="h-5 w-5 mr-2" />
+                  Download 2024 Sporting Regulations (PDF)
+                </Button>
+                <Button size="lg" variant="outline" className="px-8 py-3 h-auto">
+                  <Download className="h-5 w-5 mr-2" />
+                  Download 2024 Technical Regulations (PDF)
+                </Button>
+              </div>
+              
+              <p className="text-sm text-muted-foreground mt-6">
+                Documents are updated regularly. Last update: Formula 1 Technical Regulations v1.3 (2024)
+              </p>
+            </div>
+          </div>
+
+          {/* Educational Insights */}
+          <div className="mt-20 bg-muted/30 rounded-2xl p-8 lg:p-12">
+            <h2 className="text-3xl font-bold text-center mb-12">Formula 1 Regulations Insights</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="text-center">
+                <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
+                  <Flag className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Flag Communication</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  The flag system has evolved from simple fabric signals to electronic displays and LED marshal boards for instant communication.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
+                  <Scale className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Penalty Evolution</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Modern F1 uses sophisticated timing systems and multiple camera angles to ensure fair and accurate penalty decisions.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
+                  <Shield className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Safety First</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  F1 safety regulations are continuously updated based on research, incidents, and technological advances in motorsport safety.
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
+                  <BookOpen className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-semibold text-lg mb-3">Living Document</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  The FIA regulations are updated multiple times per season to address new technologies and improve competition fairness.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
-  }
+  };
 
-  return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="absolute inset-0 bg-grid-white/10 bg-[size:20px_20px] opacity-20" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
-        
-        <div className="relative container mx-auto px-4 py-24 lg:py-32">
-          <div className="text-center max-w-4xl mx-auto">
-            <Badge variant="outline" className="mb-6 px-4 py-2 text-sm font-medium border-primary/20 bg-primary/5">
-              <BookOpen className="h-4 w-4 mr-2" />
-              Official F1 Regulations
-            </Badge>
-            
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-              <span className="bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-                Formula 1
-              </span>
-              <br />
-              <span className="text-foreground">Rules & Regulations</span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
-              Complete guide to Formula 1 flags, penalties, sporting regulations, and technical rules governing the pinnacle of motorsport.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 h-auto">
-                <Download className="h-5 w-5 mr-2 group-hover:translate-y-0.5 transition-transform" />
-                Download Official FIA Rulebook 2024
-              </Button>
-              <Button size="lg" variant="outline" className="px-8 py-3 h-auto">
-                <Eye className="h-5 w-5 mr-2" />
-                View Quick Reference
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-16">
-        <Tabs defaultValue="flags" className="max-w-7xl mx-auto">
-          <TabsList className="grid grid-cols-4 mb-12 bg-muted/50">
-            <TabsTrigger value="flags" className="flex items-center space-x-2 data-[state=active]:bg-background">
-              <Flag className="h-4 w-4" />
-              <span className="hidden sm:inline">Race Flags</span>
-              <span className="sm:hidden">Flags</span>
-            </TabsTrigger>
-            <TabsTrigger value="penalties" className="flex items-center space-x-2 data-[state=active]:bg-background">
-              <Scale className="h-4 w-4" />
-              <span className="hidden sm:inline">Penalties</span>
-              <span className="sm:hidden">Penalties</span>
-            </TabsTrigger>
-            <TabsTrigger value="sporting" className="flex items-center space-x-2 data-[state=active]:bg-background">
-              <Users className="h-4 w-4" />
-              <span className="hidden sm:inline">Sporting Rules</span>
-              <span className="sm:hidden">Sporting</span>
-            </TabsTrigger>
-            <TabsTrigger value="technical" className="flex items-center space-x-2 data-[state=active]:bg-background">
-              <Car className="h-4 w-4" />
-              <span className="hidden sm:inline">Technical Rules</span>
-              <span className="sm:hidden">Technical</span>
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Flags Tab */}
-          <TabsContent value="flags" className="space-y-8">
-            <div className="text-center mb-12">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border/50"></div>
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
-                    <Flag className="h-5 w-5 inline mr-2 text-primary" />
-                    Formula 1 Race Flags
-                  </span>
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Official Flag Signals</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Understanding the visual communication system that controls Formula 1 racing</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {flags.map((flag, index) => {
-                const IconComponent = iconComponents[flag.icon] || Flag;
-                return (
-                  <Card key={index} className="group relative overflow-hidden border-0 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-sm hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 hover:scale-105 hover:rotate-1">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className={`h-2 ${flag.color} transition-all duration-300 group-hover:h-3`}></div>
-                    
-                    <CardHeader className="relative z-10 pb-4">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className={`p-4 rounded-2xl ${flag.color} text-white shadow-xl group-hover:scale-110 transition-transform duration-300 border border-white/20`}>
-                            <IconComponent className="h-6 w-6" />
-                          </div>
-                          <div>
-                            <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">{flag.name}</CardTitle>
-                            <Badge variant="outline" className="mt-2 border-primary/30 bg-primary/10 text-primary font-medium">{flag.category}</Badge>
-                          </div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="relative z-10 space-y-4">
-                      <div className="bg-gradient-to-r from-muted/50 to-muted/30 p-4 rounded-xl border border-border/50">
-                        <p className="font-semibold text-foreground mb-2">{flag.description}</p>
-                      </div>
-                      <div className="bg-gradient-to-r from-accent/10 to-primary/10 p-4 rounded-xl border border-primary/20">
-                        <p className="text-sm text-muted-foreground leading-relaxed">{flag.usage}</p>
-                      </div>
-                    </CardContent>
-                    
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl -translate-y-16 translate-x-16 group-hover:scale-150 transition-transform duration-700" />
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
-
-          {/* Penalties Tab */}
-          <TabsContent value="penalties" className="space-y-8">
-            <div className="text-center mb-12">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border/50"></div>
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
-                    <Scale className="h-5 w-5 inline mr-2 text-red-500" />
-                    Formula 1 Penalties
-                  </span>
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-red-600 to-orange-500 bg-clip-text text-transparent">Sanctions & Disciplinary Measures</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Understanding the enforcement system that ensures fair competition in Formula 1</p>
-            </div>
-            
-            <div className="space-y-8">
-              {penalties.map((penalty, index) => {
-                const IconComponent = iconComponents[penalty.icon] || AlertTriangle;
-                return (
-                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-r from-background to-background/50 hover:shadow-2xl hover:shadow-red-500/10 transition-all duration-500 hover:scale-[1.02] border-l-4 border-l-red-500">
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <CardHeader className="relative z-10 pb-6">
-                      <div className="flex items-start space-x-6">
-                        <div className={`p-5 rounded-2xl ${penalty.color} shadow-xl group-hover:scale-110 transition-transform duration-300 border border-border/50`}>
-                          <IconComponent className="h-8 w-8" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-2xl mb-3 group-hover:text-red-600 transition-colors duration-300">{penalty.name}</CardTitle>
-                          <CardDescription className="text-lg text-muted-foreground leading-relaxed">
-                            {penalty.description}
-                          </CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="relative z-10">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {penalty.examples.map((example, exampleIndex) => (
-                          <div key={exampleIndex} className="group/example bg-gradient-to-br from-muted/30 to-muted/20 p-5 rounded-xl border border-border/30 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300">
-                            <div className="flex items-center mb-3">
-                              <div className="w-2 h-2 bg-red-500 rounded-full mr-3 group-hover/example:scale-125 transition-transform duration-300"></div>
-                              <h4 className="font-bold text-foreground group-hover/example:text-red-600 transition-colors duration-300">{example.penalty}</h4>
-                            </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed">{example.description}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                    
-                    <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-red-500/10 to-transparent rounded-full blur-3xl -translate-y-20 translate-x-20 group-hover:scale-150 transition-transform duration-700" />
-                  </Card>
-                );
-              })}
-            </div>
-          </TabsContent>
-
-          {/* Sporting Regulations Tab */}
-          <TabsContent value="sporting" className="space-y-10">
-            <div className="text-center mb-12">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border/50"></div>
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
-                    <Users className="h-5 w-5 inline mr-2 text-blue-600" />
-                    Sporting Regulations
-                  </span>
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Racing Conduct & Procedures</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Rules governing fair competition, track conduct, and racing procedures</p>
-            </div>
-            
-            {/* Racing Regulations */}
-            <div className="mb-16">
-              <h3 className="text-2xl font-bold mb-8 text-center">
-                <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">On-Track Racing Rules</span>
-              </h3>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {sportingRegulations.map((regulation, index) => (
-                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-blue-50/50 to-white/50 dark:from-blue-950/20 dark:to-background/50 hover:shadow-xl hover:shadow-blue-500/20 transition-all duration-500 hover:scale-105 border-l-4 border-l-blue-500">
-                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <CardHeader className="relative z-10 pb-4">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-sm group-hover:scale-110 transition-transform duration-300">
-                          {index + 1}
-                        </div>
-                        <CardTitle className="text-lg font-bold group-hover:text-blue-600 transition-colors duration-300">{regulation.title}</CardTitle>
-                      </div>
-                      <CardDescription className="text-sm leading-relaxed">{regulation.description}</CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent className="relative z-10">
-                      <div className="bg-gradient-to-r from-blue-500/10 to-blue-400/10 p-4 rounded-xl border border-blue-500/20">
-                        <p className="text-xs text-muted-foreground leading-relaxed">{regulation.details}</p>
-                      </div>
-                    </CardContent>
-                    
-                    <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-blue-500/20 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-                  </Card>
-                ))}
-              </div>
-            </div>
-            
-            {/* Procedure Regulations */}
-            <div>
-              <h3 className="text-2xl font-bold mb-8 text-center">
-                <span className="bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">Race Procedures & Protocols</span>
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {procedureRegulations.map((regulation, index) => (
-                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-purple-50/50 to-white/50 dark:from-purple-950/20 dark:to-background/50 hover:shadow-xl hover:shadow-purple-500/20 transition-all duration-500 hover:-translate-y-2 border border-purple-200/50 dark:border-purple-800/50">
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    <CardHeader className="relative z-10 pb-4">
-                      <div className="flex items-start space-x-4">
-                        <div className="p-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
-                          <Timer className="h-5 w-5" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-xl font-bold group-hover:text-purple-600 transition-colors duration-300 mb-2">{regulation.title}</CardTitle>
-                          <CardDescription className="text-sm leading-relaxed">{regulation.description}</CardDescription>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="relative z-10">
-                      <div className="bg-gradient-to-r from-purple-500/10 to-purple-400/10 p-5 rounded-xl border border-purple-500/20">
-                        <p className="text-sm text-muted-foreground leading-relaxed font-medium">{regulation.details}</p>
-                      </div>
-                    </CardContent>
-                    
-                    <div className="absolute top-0 left-0 w-24 h-24 bg-gradient-to-br from-purple-500/15 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* Technical Regulations Tab */}
-          <TabsContent value="technical" className="space-y-12">
-            <div className="text-center mb-16">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border/50"></div>
-                </div>
-                <div className="relative flex justify-center">
-                  <span className="bg-background px-6 py-2 rounded-full border border-border/50">
-                    <Car className="h-5 w-5 inline mr-2 text-orange-600" />
-                    Technical Regulations
-                  </span>
-                </div>
-              </div>
-              <h2 className="text-3xl font-bold mt-6 mb-4 bg-gradient-to-r from-orange-600 to-yellow-500 bg-clip-text text-transparent">Car Specifications & Technical Compliance</h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">Engineering standards that govern Formula 1 car design and construction</p>
-            </div>
-            
-            <div className="relative">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-                {technicalRegulations.map((regulation, index) => (
-                  <Card key={index} className="group relative overflow-hidden bg-gradient-to-br from-orange-50/30 to-yellow-50/30 dark:from-orange-950/20 dark:to-yellow-950/20 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-700 hover:scale-110 hover:-rotate-2 border-2 border-orange-200/50 dark:border-orange-800/50">
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-yellow-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
-                    {/* Hexagonal accent */}
-                    <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-br from-orange-500 to-yellow-500 opacity-20 transform rotate-45 group-hover:scale-125 group-hover:rotate-90 transition-all duration-500"></div>
-                    
-                    <CardHeader className="relative z-10 pb-6">
-                      <div className="flex items-start space-x-4">
-                        <div className="p-4 rounded-2xl bg-gradient-to-br from-orange-500 to-yellow-500 text-white shadow-2xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-500">
-                          <Fuel className="h-6 w-6" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-xl font-bold group-hover:text-orange-600 transition-colors duration-300 mb-3">{regulation.title}</CardTitle>
-                          <div className="w-12 h-1 bg-gradient-to-r from-orange-500 to-yellow-500 rounded-full group-hover:w-24 transition-all duration-500"></div>
-                        </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent className="relative z-10 space-y-4">
-                      <div className="bg-gradient-to-r from-orange-500/10 to-yellow-500/10 p-5 rounded-2xl border border-orange-500/20 group-hover:border-orange-500/40 transition-all duration-300">
-                        <p className="font-semibold text-foreground mb-3 text-lg leading-relaxed">{regulation.description}</p>
-                      </div>
-                      
-                      <div className="bg-gradient-to-br from-muted/40 to-muted/20 p-5 rounded-2xl border border-border/30 group-hover:bg-orange-500/5 transition-all duration-300">
-                        <div className="flex items-start space-x-3">
-                          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2 group-hover:scale-150 transition-transform duration-300"></div>
-                          <p className="text-sm text-muted-foreground leading-relaxed flex-1">{regulation.details}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                    
-                    {/* Technical circuit pattern */}
-                    <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-yellow-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
-                    
-                    {/* Glowing orb effect */}
-                    <div className="absolute bottom-4 right-4 w-8 h-8 bg-gradient-to-br from-orange-500/30 to-yellow-500/30 rounded-full blur-lg group-hover:scale-200 transition-transform duration-700"></div>
-                  </Card>
-                ))}
-              </div>
-              
-              {/* Background tech pattern */}
-              <div className="absolute inset-0 opacity-5 pointer-events-none">
-                <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_var(--orange-500)_1px,_transparent_1px)] bg-[length:40px_40px]"></div>
-              </div>
-            </div>
-          </TabsContent>
-        </Tabs>
-
-        {/* FIA Rulebook Download Section */}
-        <div className="mt-20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 rounded-2xl p-8 lg:p-12 border border-primary/10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="flex justify-center mb-6">
-              <div className="p-4 bg-primary/10 rounded-2xl">
-                <FileText className="h-12 w-12 text-primary" />
-              </div>
-            </div>
-            <h2 className="text-3xl font-bold mb-4">Official FIA Rulebook 2024</h2>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Download the complete Formula 1 Sporting and Technical Regulations directly from the FIA. 
-              This comprehensive document contains all official rules governing the championship.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-background/50 p-6 rounded-xl border">
-                <BookOpen className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold mb-2">Sporting Regulations</h3>
-                <p className="text-sm text-muted-foreground">Competition procedures, penalties, and race conduct</p>
-              </div>
-              <div className="bg-background/50 p-6 rounded-xl border">
-                <Car className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold mb-2">Technical Regulations</h3>
-                <p className="text-sm text-muted-foreground">Car specifications, safety requirements, and technical compliance</p>
-              </div>
-              <div className="bg-background/50 p-6 rounded-xl border">
-                <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
-                <h3 className="font-semibold mb-2">Safety Standards</h3>
-                <p className="text-sm text-muted-foreground">Driver equipment, circuit safety, and emergency procedures</p>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-3 h-auto">
-                <Download className="h-5 w-5 mr-2" />
-                Download 2024 Sporting Regulations (PDF)
-              </Button>
-              <Button size="lg" variant="outline" className="px-8 py-3 h-auto">
-                <Download className="h-5 w-5 mr-2" />
-                Download 2024 Technical Regulations (PDF)
-              </Button>
-            </div>
-            
-            <p className="text-sm text-muted-foreground mt-6">
-              Documents are updated regularly. Last update: Formula 1 Technical Regulations v1.3 (2024)
-            </p>
-          </div>
-        </div>
-
-        {/* Educational Insights */}
-        <div className="mt-20 bg-muted/30 rounded-2xl p-8 lg:p-12">
-          <h2 className="text-3xl font-bold text-center mb-12">Formula 1 Regulations Insights</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
-                <Flag className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="font-semibold text-lg mb-3">Flag Communication</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                The flag system has evolved from simple fabric signals to electronic displays and LED marshal boards for instant communication.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
-                <Scale className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="font-semibold text-lg mb-3">Penalty Evolution</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Modern F1 uses sophisticated timing systems and multiple camera angles to ensure fair and accurate penalty decisions.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
-                <Shield className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="font-semibold text-lg mb-3">Safety First</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                F1 safety regulations are continuously updated based on research, incidents, and technological advances in motorsport safety.
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="p-4 bg-primary/10 rounded-2xl w-fit mx-auto mb-4">
-                <BookOpen className="h-8 w-8 text-primary" />
-              </div>
-              <h3 className="font-semibold text-lg mb-3">Living Document</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                The FIA regulations are updated multiple times per season to address new technologies and improve competition fairness.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Rules;
+  export default Rules;

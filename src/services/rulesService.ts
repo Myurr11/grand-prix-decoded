@@ -35,7 +35,22 @@ export const fetchFlags = async (): Promise<FlagData[]> => {
   try {
     const flagsCollection = collection(db, "rules/flags/items");
     const flagsSnapshot = await getDocs(flagsCollection);
-    return flagsSnapshot.docs.map(doc => doc.data() as FlagData);
+    return flagsSnapshot.docs.map(doc => {
+      const data = doc.data() as FlagData;
+      
+      // Handle special flags
+      if (data.name.toLowerCase().includes("black and white")) {
+        return { ...data, color: "bg-gradient-to-r from-black to-white" };
+      }
+      if (data.name.toLowerCase().includes("chequered")) {
+        return { ...data, color: "bg-gradient-to-r from-black to-white" };
+      }
+      if (data.name.toLowerCase().includes("orange dot")) {
+        return { ...data, color: "bg-black", hasOrangeDot: true };
+      }
+      
+      return data;
+    });
   } catch (error) {
     console.error("Error fetching flags:", error);
     return [];

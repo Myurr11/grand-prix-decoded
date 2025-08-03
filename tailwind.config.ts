@@ -19,6 +19,18 @@ export default {
 		},
 		extend: {
 			colors: {
+				black: '#000000',
+        white: '#ffffff',
+        orange: {
+          500: '#f97316', // For the orange dot
+        },
+        gray: {
+          300: '#d1d5db',
+          500: '#6b7280',
+        },
+		backgroundImage: {
+        'black-white-gradient': 'linear-gradient(to right, #000000, #ffffff)',
+		},
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -102,7 +114,13 @@ export default {
 			fontFamily: {
 				'racing': ['Inter', 'system-ui', 'sans-serif'],
 			}
-		}
+		},
 	},
 	plugins: [require("tailwindcss-animate")],
+
+	safelist: [
+    {
+      pattern: /(bg|text)-(red|yellow|blue|green|black|white|orange|purple|cyan)-(500)/,
+    },
+  ],
 } satisfies Config;
