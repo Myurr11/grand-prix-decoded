@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, BookOpen, Users, MapPin, Zap, Trophy, Flag } from 'lucide-react';
-import heroImage from '@/assets/f1-hero.jpg';
+import heroImage from '@/assets/hero-section.avif';
 
 const Index = () => {
   const features = [
@@ -49,7 +49,7 @@ const Index = () => {
         <div className="relative z-10 text-center text-white max-w-4xl mx-auto px-4">
           <Flag className="h-16 w-16 mx-auto mb-6 text-primary animate-flag-wave" />
           <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
-            Master <span className="gradient-text">Formula 1</span>
+            Master <span className="text-red-500">Formula 1</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 text-gray-300 animate-fade-in">
             Your complete guide to understanding the pinnacle of motorsport
