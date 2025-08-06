@@ -9,7 +9,7 @@
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview",
-    "migrate-calendar": "vite-node scripts/migrateCalenderData.ts",
+    "migrate-track": "vite-node scripts/migrateTrackData.ts",
     "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
